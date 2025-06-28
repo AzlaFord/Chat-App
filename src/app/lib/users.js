@@ -1,4 +1,4 @@
-import {clientPromise} from "./mongoDB"
+import {clientPromise} from "mongodb"
 
 export async function getUsers() {
     const client = await clientPromise

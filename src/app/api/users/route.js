@@ -1,10 +1,10 @@
-import { getUsers } from "@/lib/users";
+import { getUsers } from "./../../lib/users";
 
-export default async function handler(req, res) {
-  if (req.method === "GET") {
-    const users = await getUsers();
-    res.status(200).json(users);
-  } else {
-    res.status(405).end();
-  }
+export async function GET(request) {
+  const users = await getUsers();
+  return new Response(JSON.stringify(users), {
+    status: 200,
+    headers: { "Content-Type": "application/json" },
+  });
 }
+
