@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation'
 
 export default function Login() {
-  const [login, setLogin] = useState('');
+  const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter()
 
@@ -15,12 +15,12 @@ export default function Login() {
     headers: {
         "Content-Type": "application/json",
     },
-    body: JSON.stringify({ login, password })
+    body: JSON.stringify({ userName, password })
     });
 
     const data = await res.json();
     if(res.ok){
-        router.push(`/home?user=${login}`);
+        router.push(`/home?user=${userName}`);
     }
   }
 
@@ -29,8 +29,8 @@ export default function Login() {
       <input
         type="text"
         name="login"
-        value={login}
-        onChange={e => setLogin(e.target.value)}
+        value={userName}
+        onChange={e => setUserName(e.target.value)}
         placeholder="Login"
       />
       <input

@@ -38,7 +38,7 @@ export async function POST(request) {
 
     const {user} = autentificare
     const token = await createToken(user)
-
+    
     if (token.success) {
         return new Response(
             JSON.stringify({ message: "token primit reusit", token: token.token }),
