@@ -1,6 +1,5 @@
 import clientPromise from "./mongoDB";
 import bcrypt from "bcrypt";
-import jsonwebtoken from 'jsonwebtoken';
 
 const saltRounds = 10;
 
