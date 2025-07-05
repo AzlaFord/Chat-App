@@ -1,5 +1,6 @@
 import clientPromise from "./mongoDB";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 const saltRounds = 10;
 
@@ -16,6 +17,8 @@ export async function register(userName, password) {
     }
 }
 export async function authLogin(userName,password){
+    const client = await clientPromise
+    const db = client.db("Chat-With-Us")
 
     const user = await  db.collection("users").findOne({userName})
     

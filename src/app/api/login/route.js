@@ -1,6 +1,5 @@
 import {authLogin,createToken} from "./../../lib/auth";
 
-
 export async function POST(request) {
     const body = await request.json();
     const { userName, password } = body;
@@ -44,7 +43,9 @@ export async function POST(request) {
             JSON.stringify({ message: "token primit reusit", token: token.token }),
             {
                 status: 200,
-                headers: { "Content-Type": "application/json" }
+                headers: { 
+                    "Set-Cookie": `token=${token}; HttpOnly; Path=/; Max-Age=11100`,
+                    "Content-Type": "application/json" }
             }
         );
     }else{
