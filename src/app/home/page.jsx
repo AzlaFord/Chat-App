@@ -5,7 +5,6 @@ export default async function HomePage() {
   const cookieStore = await cookies()
   const rawToken = cookieStore.get('token')?.value
   const token = rawToken ? decodeURIComponent(rawToken) : null;
-  console.log(JSON.stringify({...{token}}))
   let user = "necunoscut"
   if(token){
     try{
