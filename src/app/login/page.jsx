@@ -15,13 +15,15 @@ export default function Login() {
     headers: {
         "Content-Type": "application/json",
     },
-    body: JSON.stringify({ userName, password })
+    body: JSON.stringify({ userName, password }),
+    credentials: "include"
+    
     });
 
     const data = await res.json();
 
     if(res.ok){
-        router.push(`/home?user=${userName}`);
+        router.push(`/home`);
     }
   }
 
