@@ -14,6 +14,7 @@ export default async function HomePage() {
       user = "invalid token"
     }
   }
+  
   return (
     <main>
       <h1 className="text-2xl font-bold">Salut, {user}!</h1>

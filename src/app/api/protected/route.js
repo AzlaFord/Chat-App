@@ -15,7 +15,8 @@ export async function GET(request) {
         })
     }
     try{
-        const payload = jwt.verify(token.process.env.JWT_SECRET)
+        const payload = jwt.verify(token, process.env.JWT_SECRET)
+        
             return new Response(
             JSON.stringify({ message: "Token valid", user: payload }),
             {

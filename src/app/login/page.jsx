@@ -23,7 +23,7 @@ export default function Login() {
     const data = await res.json();
 
     if(res.ok){
-        router.push(`/home`);
+      router.push(`/home`);
     }
   }
 
