@@ -1,16 +1,20 @@
 import { redirect } from 'next/navigation'
-
+import { cookies } from 'next/headers'
+import jwt from "jsonwebtoken"
 export default async function HomeLayout({ children }) {
-  const res = await fetch("http://localhost:3000/api/protected", {
-    cache: 'no-store'
-  })
+  const cookie = await cookies()
+  const token = cookie.get("token")?.value
 
-  const data = await res.json()
-  console.log(data)
-
-  if (!data.user) { 
+  if (!token) {
     redirect('/login')
   }
+  
+  try{
+    const payload = jwt.verify(token,process.env.JWT_SECRET)
+  } catch{
+    redirect("login")
+  }
+
 
   return (
     <html lang="en">
