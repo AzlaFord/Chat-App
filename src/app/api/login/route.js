@@ -44,7 +44,7 @@ export async function POST(request) {
             {
                 status: 200,
                 headers: { 
-                    "Set-Cookie": `token=${encodeURIComponent(token.token)}; HttpOnly; Path=/; Max-Age=11100`,
+                    "Set-Cookie": `token=${encodeURIComponent(token.token)}; HttpOnly; Path=/; Max-Age=604800`,
                     "Content-Type": "application/json" }
             }
         );

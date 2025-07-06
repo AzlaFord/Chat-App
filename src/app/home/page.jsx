@@ -4,11 +4,10 @@ import jwt from 'jsonwebtoken'
 export default async function HomePage() {
   const cookieStore = await cookies()
   const rawToken = cookieStore.get('token')?.value
-  const token = rawToken ? decodeURIComponent(rawToken) : null;
   let user = "necunoscut"
-  if(token){
+  if(rawToken){
     try{
-      const decode = jwt.verify(token,process.env.JWT_SECRET)
+      const decode = jwt.verify(rawToken,process.env.JWT_SECRET)
       user = decode.userName
     }catch(err){
       user = "invalid token"

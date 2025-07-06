@@ -38,7 +38,7 @@ export async function createToken(user) {
 
     const payload = { userId: user._id, userName: user.userName ,role:user.role};
     const secret= process.env.JWT_SECRET
-    const options = {expiresIn:"1h"}
+    const options = {expiresIn:"7d"}
 
     if(!secret){
         return {success:false,message:"nu exista secretul JWT"}
