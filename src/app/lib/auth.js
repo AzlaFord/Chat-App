@@ -36,7 +36,7 @@ export async function authLogin(userName,password){
 }
 export async function createToken(user) {
 
-    const payload = { userId: user._id, userName: user.userName };
+    const payload = { userId: user._id, userName: user.userName ,role:user.role};
     const secret= process.env.JWT_SECRET
     const options = {expiresIn:"1h"}
 
