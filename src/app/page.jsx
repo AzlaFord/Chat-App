@@ -1,4 +1,6 @@
-export default function Home(){
-
-    return ( <> <h1>Wellcome Home</h1></>)
+import { redirect } from 'next/navigation'
+export default function page(){
+    redirect('/home')
+    return(<>
+    </>)
 }
