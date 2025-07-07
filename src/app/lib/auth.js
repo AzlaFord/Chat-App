@@ -16,6 +16,7 @@ export async function register(userName, password) {
         await db.collection("users").insertOne({ userName, password: hash })
     }
 }
+
 export async function authLogin(userName,password){
     const client = await clientPromise
     const db = client.db("Chat-With-Us")
@@ -34,6 +35,7 @@ export async function authLogin(userName,password){
     
     return {success:true,message:"tot ok",user:user}
 }
+
 export async function createToken(user) {
 
     const payload = { userId: user._id, userName: user.userName ,role:user.role};
@@ -48,12 +50,19 @@ export async function createToken(user) {
     
     return {success:true,message:"totul a mers bine ",token:token,user:user}
 }
+
 export async function createMessage(user,text) {
     const client = await clientPromise
     const db = client.db("Chat-With-Us")
+
     try{
-        await db.collection("mesaje").insertOne({ userId: user._id,  userName: user.userName,text,createdAt: new Date() })
-        return {success:true,message:"totul a mers bine ",user:user}
+        const result = await db.collection("mesaje").insertOne({ userId: user._id,  userName: user.userName,text,createdAt: new Date() })
+        return {success:true,message:"totul a mers bine ",data:{
+            _id:result.insertedId,
+            user,
+            text,
+            createdAt: new Date()
+        }}
     }catch(err){
         console.log(err)
         return {success:false,message:"nu a mers prea bine ",user:user}
