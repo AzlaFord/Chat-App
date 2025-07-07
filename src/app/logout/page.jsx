@@ -12,10 +12,12 @@ export default function logout(){
         })
         router.push('/login')
     }
+
     return(<>
         <button onClick={handleLogout}>
             logout
-        </button></>)
+        </button>
+    </>)
     
     
 }

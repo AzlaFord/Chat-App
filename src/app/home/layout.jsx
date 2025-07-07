@@ -6,13 +6,13 @@ export default async function HomeLayout({ children }) {
   const token = cookie.get("token")?.value
 
   if (!token) {
-    redirect('/login')
+    redirect('/api/logout')
   }
   
   try{
     const payload = jwt.verify(token,process.env.JWT_SECRET)
   } catch{
-    redirect("login")
+    redirect("/api/logout")
   }
 
   return (<>
