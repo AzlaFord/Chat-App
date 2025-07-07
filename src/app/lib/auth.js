@@ -48,3 +48,14 @@ export async function createToken(user) {
     
     return {success:true,message:"totul a mers bine ",token:token,user:user}
 }
+export async function createMessage(user,text) {
+    const client = await clientPromise
+    const db = client.db("Chat-With-Us")
+    try{
+        await db.collection("mesaje").insertOne({ userId: user._id,  userName: user.userName,text,createdAt: new Date() })
+        return {success:true,message:"totul a mers bine ",user:user}
+    }catch(err){
+        console.log(err)
+        return {success:false,message:"nu a mers prea bine ",user:user}
+    }
+}
