@@ -10,8 +10,14 @@ export async function POST(request) {
             headers:{"Content-Type":"application/json"}
         })
     }
-    if (userName.length < 4 || password.length < 8) {
-        return new Response(JSON.stringify({ message: "Username minim 4 caractere și parola minim 8" }), {
+    if (userName.length < 4 ) {
+        return new Response(JSON.stringify({ message: "Username minim 4" }), {
+            status: 400,
+            headers: { "Content-Type": "application/json" },
+        });
+    }
+    if(password.length < 8){
+        return new Response(JSON.stringify({ message: "parola trebuie sa aiba minim 8" }), {
             status: 400,
             headers: { "Content-Type": "application/json" },
         });

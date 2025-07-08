@@ -31,8 +31,6 @@ export default function Login() {
 
   return (
     <>
-    <div className="bg-blue-500 text-white p-4">Test Tailwind</div>
-
       <div className="flex min-h-screen w-full items-center justify-center p-6 md:p-10">
         <div className="w-full max-w-sm">
           <LoginForm

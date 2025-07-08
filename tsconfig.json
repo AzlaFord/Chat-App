@@ -34,7 +34,7 @@
     "src/app/login/page.jsx",
     "src/app/page.jsx",
     "src/app/api/login/route.js"
-  ],
+, "src/app/register/page.jsx"  ],
   "exclude": [
     "node_modules"
   ]
