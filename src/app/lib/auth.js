@@ -68,3 +68,20 @@ export async function createMessage(user,text) {
         return {success:false,message:"nu a mers prea bine ",user:user}
     }
 }
+export async function createChat(user,chatName) {
+    const client = await clientPromise
+    const db = client.db("Chat-With-Us")
+    try{
+        const result = await db.collection("Chats").insertOne({userId: [user._id],chatName,createdAt: new Date()})
+        return {success:true,message:"chatul a fost creat",data:{
+            _id:result.insertedId,
+            chatName,
+            createdAt: new Date()
+
+        }}
+    }catch(err){
+        console.log("error : ",err)
+        return {success:false,message:"ceva nu a mers bine"}
+    }
+    
+}

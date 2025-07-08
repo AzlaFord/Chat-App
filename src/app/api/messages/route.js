@@ -26,14 +26,14 @@ export async function POST(request) {
         const mesaj = await createMessage(payload, text);
 
         if (!mesaj.success) {
-            return Response.json({ message: "nu a fost creat mesajul" }, { status: 400 });
+            return new Response.json({ message: "nu a fost creat mesajul" }, { status: 400 });
         }
 
-        return Response.json({ message: "mesajul a fost creat", data: mesaj.data });
+        return new Response.json({ message: "mesajul a fost creat", data: mesaj.data });
         
         } catch (err) {
         console.error(err);
-        return Response.json({ message: "Eroare server", error: err.message }, { status: 500 });
+        return new Response.json({ message: "Eroare server", error: err.message }, { status: 500 });
     }
 
 }

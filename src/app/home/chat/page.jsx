@@ -1,23 +1,21 @@
 'use client'
 import { useState } from "react"
 
-export default function Chat() {
+export default function CreateChat() {
     const [text, setText] = useState("")
 
-    async function sendMessage(text) {
-        console.log("text trimis:", text)
-
-        const res = await fetch('/api/messages', {
+    async function createChat(chatName) {
+        
+        const res = await fetch('/api/createchat', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ text })
+            body: JSON.stringify({ chatName })
         })
         const data = await res.json()
         console.log(data)
     }
-
     return (
         <>
             <input
@@ -25,7 +23,18 @@ export default function Chat() {
                 value={text}
                 onChange={(e) => setText(e.target.value)}
             />
-            <button onClick={() => sendMessage(text)}>Trimite</button>
+            <button onClick={() => createChat(text)}>Trimite</button>
         </>
     )
 }
+// async function sendMessage(text) {
+//     const res = await fetch('/api/messages', {
+//         method: "POST",
+//         headers: {
+//             "Content-Type": "application/json"
+//         },
+//         body: JSON.stringify({ text })
+//     })
+//     const data = await res.json()
+//     console.log(data)
+// }
