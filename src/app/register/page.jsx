@@ -17,6 +17,7 @@ export default function Register() {
   const [user, setUser] = useState("")
   const [pass, setPass] = useState("")
   const router = useRouter()
+  const [mail,setMail] = useState("")
   const [error, setError] = useState("")
 
   async function submithething(e) {
@@ -25,7 +26,7 @@ export default function Register() {
     const res = await fetch("/api/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userName: user, password: pass }),
+      body: JSON.stringify({email:mail, userName: user, password: pass }),
     })
     if(res.ok){
       const res2 = await fetch("/api/login", {
@@ -77,6 +78,19 @@ export default function Register() {
                     />
                 </div>
                 <div className="grid gap-3">
+                    <Label htmlFor="email">Email</Label>
+                    <Input
+                    type="email"
+                    id="email"
+                    required
+                    value={mail}
+                    onChange={(e) => {
+                      setMail(e.target.value)
+                      setError("")
+                    }}
+                />
+                </div>
+                <div className="grid gap-3">
                     <Label htmlFor="password">Password</Label>
                     <Input
                     id="password"
@@ -91,7 +105,10 @@ export default function Register() {
                 </div>
                 <div className="flex flex-col gap-3">
                     <Button type="submit" className="w-full">
-                    Register
+                      Register
+                    </Button>
+                    <Button variant="outline" className="w-full">
+                      Register with Google
                     </Button>
                 </div>
                 </div>

@@ -8,14 +8,12 @@ export default async function HomeLayout({ children }) {
   if (token) {
     redirect('/home')
   }
-  
   try{
     const payload = jwt.verify(token,process.env.JWT_SECRET)
     redirect("home")
   }catch{
     
   }
-
   return (<>
     {children}
   </>

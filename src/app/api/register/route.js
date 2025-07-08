@@ -3,10 +3,17 @@ import { register } from "./../../lib/auth";
 export async function POST(request) {
 
     const body = await request.json()
-    const {userName,password} = body
+    const {email,userName,password} = body
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        return new Response(JSON.stringify({message:"Email invalid"}),{
+            status:400,
+            headers:{"Content-Type":"application/json"}
+        })        
+    }
+
     if(!userName || !password){
         return new Response(JSON.stringify({message:"user name gol sau parola goala"}),{
-            status:422,
+            status:400,
             headers:{"Content-Type":"application/json"}
         })
     }
@@ -22,7 +29,7 @@ export async function POST(request) {
             headers: { "Content-Type": "application/json" },
         });
     }
-    const result = await register(userName,password)
+    const result = await register(email,userName,password)
     
     if(result){
         return new Response(JSON.stringify({message:"user deja exista"}),{
