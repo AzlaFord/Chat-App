@@ -21,14 +21,20 @@
       {
         "name": "next"
       }
-    ]
+    ],
+    "paths": {
+      "@/*": ["./src/app/*"]
+    }
   },
   "include": [
     "next-env.d.ts",
     ".next/types/**/*.ts",
     "**/*.ts",
-    "**/*.tsx"
-, "src/app/login/page.jsx", "src/app/page.jsx", "src/app/api/login/route.js"  ],
+    "**/*.tsx",
+    "src/app/login/page.jsx",
+    "src/app/page.jsx",
+    "src/app/api/login/route.js"
+  ],
   "exclude": [
     "node_modules"
   ]

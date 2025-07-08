@@ -1,50 +1,49 @@
 "use client"
-import { useState } from 'react';
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { LoginForm } from "@/components/login-form"
 
 export default function Login() {
-  const [userName, setUserName] = useState('');
-  const [password, setPassword] = useState('');
+  const [userName, setUserName] = useState('')
+  const [password, setPassword] = useState('')
   const router = useRouter()
 
   async function handleSubmit(e) {
-    e.preventDefault();
+    e.preventDefault()
 
     const res = await fetch("/api/login", {
-    method: "POST",
-    headers: {
-        "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ userName, password }),
-    credentials: "include"
-    
-    });
+      method: "POST",
+      headers: {
+          "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userName, password }),
+      credentials: "include"
+    })
 
-    const data = await res.json();
+    const data = await res.json()
 
     if(res.ok){
-      router.push(`/home`);
+      router.push(`/home`)
+    } else {
+      console.log(data)
     }
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        name="login"
-        value={userName}
-        onChange={e => setUserName(e.target.value)}
-        placeholder="Login"
-      />
-      <input
-        type="password"
-        name="password"
-        value={password}
-        onChange={e => setPassword(e.target.value)}
-        placeholder="Password"
-      />
-      <button type="submit">Login</button>
-    </form>
-  );
-}
+    <>
+    <div className="bg-blue-500 text-white p-4">Test Tailwind</div>
 
+      <div className="flex min-h-screen w-full items-center justify-center p-6 md:p-10">
+        <div className="w-full max-w-sm">
+          <LoginForm
+            userName={userName}
+            password={password}
+            onUserNameChange={setUserName}
+            onPasswordChange={setPassword}
+            onSubmit={handleSubmit}
+          />
+        </div>
+      </div>
+    </>
+  )
+}

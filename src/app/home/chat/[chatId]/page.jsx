@@ -1,9 +1,12 @@
 "use client"
+
 import { useState } from "react"
 import { useParams } from 'next/navigation'
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 
 export default function Chat(){
-    const [mesaj,setMesaj] = useState("")
+    const [mesaj,setMesaj] = useState(" ")
     const { chatId } = useParams()
 
     async function sendMessage(text) {
@@ -15,14 +18,14 @@ export default function Chat(){
             body: JSON.stringify({ text,chatId })
         })
         const data = await res.json()
+        setMesaj("")
     }
-    
     return (<>            
-        <input
+        <Input
             type="text"
             value={mesaj}
             onChange={(e) => setMesaj(e.target.value)}
         />
-        <button onClick={() => sendMessage(mesaj)}>Trimite</button>
+        <Button onClick={() => sendMessage(mesaj)}>Trimite</Button>
         </>)
 }
