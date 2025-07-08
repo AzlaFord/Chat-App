@@ -51,23 +51,24 @@ export async function createToken(user) {
     return {success:true,message:"totul a mers bine ",token:token,user:user}
 }
 
-export async function createMessage(user,text) {
+export async function createMessage(user,text,chatId) {
     const client = await clientPromise
     const db = client.db("Chat-With-Us")
-
+    const createdAt = new Date()
     try{
-        const result = await db.collection("mesaje").insertOne({ userId: user._id,  userName: user.userName,text,createdAt: new Date() })
+        await db.collection("mesaje").insertOne({ chatId,  userName: user.userName,text,createdAt})
         return {success:true,message:"totul a mers bine ",data:{
-            _id:result.insertedId,
+            chatId,
+            userId: user._id,
             user,
             text,
-            createdAt: new Date()
+            createdAt
         }}
     }catch(err){
-        console.log(err)
         return {success:false,message:"nu a mers prea bine ",user:user}
     }
 }
+
 export async function createChat(user,chatName) {
     const client = await clientPromise
     const db = client.db("Chat-With-Us")

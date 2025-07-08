@@ -1,3 +1,28 @@
+"use client"
+import { useState } from "react"
+import { useParams } from 'next/navigation'
+
 export default function Chat(){
-    return (<>CHAT</>)
+    const [mesaj,setMesaj] = useState("")
+    const { chatId } = useParams()
+
+    async function sendMessage(text) {
+        const res = await fetch('/api/messages', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ text,chatId })
+        })
+        const data = await res.json()
+    }
+    
+    return (<>            
+        <input
+            type="text"
+            value={mesaj}
+            onChange={(e) => setMesaj(e.target.value)}
+        />
+        <button onClick={() => sendMessage(mesaj)}>Trimite</button>
+        </>)
 }
