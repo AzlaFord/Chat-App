@@ -12,6 +12,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useRouter } from 'next/navigation'
+import {BirthDatePicker}  from "@/components/BirthDatePicker"
 
 export default function Register() {
   const [user, setUser] = useState("")
@@ -19,15 +20,17 @@ export default function Register() {
   const router = useRouter()
   const [mail,setMail] = useState("")
   const [error, setError] = useState("")
-
+  const [birthDate, setBirthDate] = useState("")
+  
   async function submithething(e) {
     e.preventDefault()
 
     const res = await fetch("/api/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({email:mail, userName: user, password: pass }),
+      body: JSON.stringify({birthdate:birthDate,email:mail, userName: user, password: pass }),
     })
+
     if(res.ok){
       const res2 = await fetch("/api/login", {
         method: "POST",
@@ -102,6 +105,10 @@ export default function Register() {
                       setError("")
                     }}
                     />
+                </div>
+                <div className="grid gap-3">
+                  <Label htmlFor="password">Birthdate</Label>
+                  <BirthDatePicker value={birthDate} onChange={setBirthDate} />
                 </div>
                 <div className="flex flex-col gap-3">
                     <Button type="submit" className="w-full">

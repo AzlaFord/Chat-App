@@ -4,17 +4,19 @@ import jwt from "jsonwebtoken";
 
 const saltRounds = 10;
 
-export async function register(email,userName, password) {
-    const client = await clientPromise
-    const db = client.db("Chat-With-Us")
-    const exists = await db.collection("users").findOne({userName})
-    
-    if(exists){
-        return { success: false, message: "User există" };
-    }else{
-        const hash = await bcrypt.hash(password, saltRounds)
-        await db.collection("users").insertOne({ email,userName, password: hash })
-    }
+export async function register(birthdate, email, userName, password) {
+  const client = await clientPromise
+  const db = client.db("Chat-With-Us")
+
+  const exists = await db.collection("users").findOne({ userName })
+
+  if (exists) {
+    return { success: false, message: "User există" }
+  }
+
+  const hash = await bcrypt.hash(password, saltRounds)
+  await db.collection("users").insertOne({ birthdate, email, userName, password: hash })
+
 }
 
 export async function authLogin(userName,password){

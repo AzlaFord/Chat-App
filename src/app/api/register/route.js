@@ -3,14 +3,20 @@ import { register } from "./../../lib/auth";
 export async function POST(request) {
 
     const body = await request.json()
-    const {email,userName,password} = body
+    const {birthdate,email,userName,password} = body
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
         return new Response(JSON.stringify({message:"Email invalid"}),{
             status:400,
             headers:{"Content-Type":"application/json"}
         })        
     }
-
+    
+    if(!birthdate){
+        return new Response(JSON.stringify({message:"nu e completat campul ziua nastere"}),{
+            status:400,
+            headers:{"Content-Type":"application/json"}
+        })        
+    }
     if(!userName || !password){
         return new Response(JSON.stringify({message:"user name gol sau parola goala"}),{
             status:400,
@@ -29,7 +35,7 @@ export async function POST(request) {
             headers: { "Content-Type": "application/json" },
         });
     }
-    const result = await register(email,userName,password)
+    const result = await register(birthdate,email,userName,password)
     
     if(result){
         return new Response(JSON.stringify({message:"user deja exista"}),{
