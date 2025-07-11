@@ -1,7 +1,9 @@
 import clientPromise from "./mongoDB";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { OAuth2Client } from "google-auth-library";
 
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const saltRounds = 10;
 
 export async function register(birthdate, email, userName, password) {
@@ -36,6 +38,50 @@ export async function authLogin(userName,password){
     }
     
     return {success:true,message:"tot ok",user:user}
+}
+export async function authLoginGoogle(id_token) {
+  if (!id_token) {
+    return { success: false, message: "Nu există id_token" };
+  }
+
+  try {
+    const ticket = await client.verifyIdToken({
+      idToken: id_token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+
+    const clientDb = await clientPromise;
+    const db = clientDb.db("Chat-With-Us");
+
+    let user = await db.collection("users").findOne({ email: payload.email });
+
+    if (!user) {
+      const newUser = {
+        userName: payload.name,
+        email: payload.email,
+        googleId: payload.sub,
+        birthdate: null,
+        password: null,
+        role: "user",
+      };
+      const result = await db.collection("users").insertOne(newUser);
+      user = { ...newUser, _id: result.insertedId };
+    }
+
+    const tokenObj = await createToken(user);
+
+    if (!tokenObj.success) {
+      return { success: false, message: tokenObj.message };
+    }
+
+    return { success: true, token: tokenObj.token, user };
+
+  } catch (error) {
+    console.error("Google token invalid:", error);
+    return { success: false, message: "Token Google invalid" };
+  }
 }
 
 export async function createToken(user) {
