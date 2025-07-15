@@ -75,7 +75,6 @@ export default function Register() {
           console.log("✅ Google script loaded");
 
           if (!window.google) {
-            console.log("❌ window.google STILL undefined after script");
             return;
           }
           
