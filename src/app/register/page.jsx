@@ -16,26 +16,36 @@ export default function Register() {
   const [mail, setMail] = useState("")
   const [birthDate, setBirthDate] = useState("")
   const [error, setError] = useState("")
-  const router = useRouter()
-
-
+  const [token, setToken] = useState(null)
+  const router = useRouter();
 
   function handleCredentialResponse(response) {
     const id_token = response.credential;
-
     fetch("/api/loginGoogle", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id_token }),
     })
-      .then(res => {
-        if (res.ok) {
-          router.push("/home")
-        } else {
-          setError("Login with Google failed")
-        }
-      });
+    .then(res => res.json())
+    .then(data => {
+      if (data.token) {
+        document.cookie = `token=${data.token}; path=/;`;
+        setToken(data.token) // setezi token în stare
+      } else {
+        setError(data.message || "Login failed");
+      }
+    })
+    .catch(() => setError("Login failed"));
   }
+
+  // în useEffect
+  useEffect(() => {
+    if (token) {
+      router.push("/home")
+    }
+  }, [token])
+
+
 
   async function submitRegister(e) {
     e.preventDefault()

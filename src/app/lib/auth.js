@@ -39,6 +39,7 @@ export async function authLogin(userName,password){
     
     return {success:true,message:"tot ok",user:user}
 }
+
 export async function authLoginGoogle(id_token) {
   if (!id_token) {
     return { success: false, message: "Nu există id_token" };
