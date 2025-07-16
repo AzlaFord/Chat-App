@@ -25,7 +25,7 @@ export function LoginForm({
 }) {
   const router = useRouter()
   const [token, setToken] = useState(null)
-
+  const [error, setError] = useState("")
   function handleCredentialResponse(response) {
     const id_token = response.credential;
     fetch("/api/loginGoogle", {
@@ -64,19 +64,20 @@ export function LoginForm({
           onLoad={() => {
             console.log("✅ Google script loaded");
 
-            if (!window.google) return;
+            if ((!window as any).google) return;
 
-            window.google.accounts.id.initialize({
-              client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
-              callback: handleCredentialResponse,
-            });
+              (window as any).google.accounts.id.initialize({
+                client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+                callback: handleCredentialResponse,
+              });
 
-            window.google.accounts.id.renderButton(
-              document.getElementById("googleSignInDiv"),
-              { theme: "outline", size: "large" }
-            );
+              (window as any).google.accounts.id.renderButton(
+                document.getElementById("googleSignInDiv"),
+                { theme: "outline", size: "large" }
+              );
 
-            window.google.accounts.id.prompt();
+
+            (window as any).google.accounts.id.prompt();
           }}
         />
         <Card>
