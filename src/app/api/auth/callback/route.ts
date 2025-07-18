@@ -1,7 +1,8 @@
-export async function GET(req) {
+import { NextResponse } from "next/server";
+
+export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const code = searchParams.get("code");
-  console.log("URL primit:", req.url);
 
   if (!code) {
     return new Response("No code", { status: 400 });
@@ -22,10 +23,11 @@ export async function GET(req) {
   });
 
   const tokens = await tokenRes.json();
-
+  console.log("Google token response:", tokens);
+  
   if (!tokens.id_token) {
     return new Response("Failed to get tokens", { status: 400 });
   }
-
-  return Response.redirect("http://localhost:3000/home", 302);
+  
+  return NextResponse.redirect(new URL("/home", req.url));
 }

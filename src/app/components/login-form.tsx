@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import GoogleLoginButton from "./ui/buttonGoogle"
 import {
   Card,
   CardContent,
@@ -13,7 +14,6 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import Script from "next/script"
 export function LoginForm({
   className,
   userName,
@@ -37,7 +37,7 @@ export function LoginForm({
     .then(data => {
       if (data.token) {
         document.cookie = `token=${data.token}; path=/;`;
-        setToken(data.token) // setezi token în stare
+        setToken(data.token) 
       } else {
         setError(data.message || "Login failed");
       }
@@ -45,7 +45,6 @@ export function LoginForm({
     .catch(() => setError("Login failed"));
   }
 
-  // în useEffect
   useEffect(() => {
     if (token) {
       router.push("/home")
@@ -57,29 +56,6 @@ export function LoginForm({
 
     <>
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-        <Script
-          src="https://accounts.google.com/gsi/client"
-          async
-          defer
-          onLoad={() => {
-            console.log("✅ Google script loaded");
-
-            if ((!window as any).google) return;
-
-              (window as any).google.accounts.id.initialize({
-                client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
-                callback: handleCredentialResponse,
-              });
-
-              (window as any).google.accounts.id.renderButton(
-                document.getElementById("googleSignInDiv"),
-                { theme: "outline", size: "large" }
-              );
-
-
-            (window as any).google.accounts.id.prompt();
-          }}
-        />
         <Card>
           <CardHeader>
             <CardTitle>Login to your account</CardTitle>
@@ -121,10 +97,11 @@ export function LoginForm({
                   <Button type="submit" className="w-full">
                     Login
                   </Button>
-                  <div id="googleSignInDiv" className="w-full flex justify-center">
 
-                    Login with Google
-                  </div>
+                    <GoogleLoginButton
+                      onSuccess={(id_token) => {
+                      }}
+                    />
                 </div>
               </div>
               <div className="mt-4 text-center text-sm">

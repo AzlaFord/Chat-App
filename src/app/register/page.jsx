@@ -38,7 +38,6 @@ export default function Register() {
     .catch(() => setError("Login failed"));
   }
 
-  // în useEffect
   useEffect(() => {
     if (token) {
       router.push("/home")
@@ -135,7 +134,7 @@ export default function Register() {
                   <div id="googleSignInDiv" className="w-full flex justify-center"></div>
                 {error && <p className="text-red-500">{error}</p>}
 
-                <div className="mt-4 text-center text-sm">
+                <div className="mt-4 text-center text-sm ">
                   Already have an account? <Link href="/login" className="underline">Log in</Link>
                 </div>
               </div>
