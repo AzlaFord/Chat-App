@@ -110,15 +110,12 @@ export function LoginForm({
                 callback: handleCredentialResponse,
               });
 
-              window.google.accounts.id.renderButton(
-                document.getElementById("googleSignInDiv"),
-                { theme: "outline", size: "large" }
-              );
+            window.google.accounts.id.renderButton(
+              document.getElementById("googleSignInDiv"),
+              { theme: "outline", size: "large" }
+            );
 
-              window.google.accounts.id.prompt();
-            } catch (error) {
-              console.error("❌ Error initializing Google Sign-In:", error);
-            }
+            window.google.accounts.id.prompt();
           }}
         />
         <Card>
@@ -163,13 +160,9 @@ export function LoginForm({
                     Login
                   </Button>
                   <div id="googleSignInDiv" className="w-full flex justify-center">
+
                     Login with Google
                   </div>
-                  {error && (
-                    <div className="text-center p-3 border border-red-200 rounded-lg bg-red-50">
-                      <p className="text-red-600 text-sm">{error}</p>
-                    </div>
-                  )}
                 </div>
               </div>
               <div className="mt-4 text-center text-sm">
