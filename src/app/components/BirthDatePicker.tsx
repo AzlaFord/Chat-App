@@ -10,6 +10,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
+import { generateYearsArray, formatDate, isDateInFuture } from "@/lib/dateUtils"
 
 type Props = {
   value?: Date
@@ -60,17 +61,12 @@ export function BirthDatePicker({ value, onChange }: Props) {
   ]
 
   const years = React.useMemo(() => {
-    const currentYear = new Date().getFullYear()
-    const arr = []
-    for (let y = currentYear; y >= 1900; y--) {
-      arr.push(y)
-    }
-    return arr
+    return generateYearsArray()
   }, [])
 
   const formattedDate =
     selectedDay && selectedMonth !== undefined && selectedYear !== undefined
-      ? format(new Date(selectedYear, selectedMonth, selectedDay.getDate()), "dd/MM/yyyy")
+      ? formatDate(new Date(selectedYear, selectedMonth, selectedDay.getDate()))
       : ""
 
   return (
@@ -92,11 +88,11 @@ export function BirthDatePicker({ value, onChange }: Props) {
               mode="single"
               selected={selectedDay}
               onSelect={(date) => {
-                if (!date || date > new Date()) return
+                if (!date || isDateInFuture(date)) return
                 setSelectedDay(date)
                 setStep("month")
               }}
-              disabled={(date) => date > new Date()}
+              disabled={(date) => isDateInFuture(date)}
             />
             <Button
               variant="ghost"

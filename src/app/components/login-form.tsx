@@ -26,23 +26,42 @@ export function LoginForm({
   const router = useRouter()
   const [token, setToken] = useState(null)
 
+  const [error, setError] = useState(null);
+
   function handleCredentialResponse(response) {
+    console.log("🔐 Google Sign-In response received");
+    
+    if (!response || !response.credential) {
+      setError("Invalid Google Sign-In response");
+      return;
+    }
+
     const id_token = response.credential;
+    
     fetch("/api/loginGoogle", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id_token }),
     })
-    .then(res => res.json())
+    .then(res => {
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+      return res.json();
+    })
     .then(data => {
       if (data.token) {
         document.cookie = `token=${data.token}; path=/;`;
-        setToken(data.token) // setezi token în stare
+        setToken(data.token);
+        setError(null);
       } else {
         setError(data.message || "Login failed");
       }
     })
-    .catch(() => setError("Login failed"));
+    .catch((error) => {
+      console.error("❌ Google login error:", error);
+      setError("Login failed. Please try again.");
+    });
   }
 
   // în useEffect
@@ -64,19 +83,42 @@ export function LoginForm({
           onLoad={() => {
             console.log("✅ Google script loaded");
 
-            if (!window.google) return;
+            if (!window.google) {
+              console.error("❌ Google script not loaded properly");
+              return;
+            }
 
-            window.google.accounts.id.initialize({
-              client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
-              callback: handleCredentialResponse,
-            });
+            const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+            
+            if (!clientId || clientId === "your_google_client_id_here") {
+              console.error("❌ Google Client ID not configured. Please set NEXT_PUBLIC_GOOGLE_CLIENT_ID in .env.local");
+              const googleDiv = document.getElementById("googleSignInDiv");
+              if (googleDiv) {
+                googleDiv.innerHTML = `
+                  <div class="text-center p-4 border border-red-200 rounded-lg bg-red-50">
+                    <p class="text-red-600 text-sm">Google Sign-In not configured</p>
+                    <p class="text-red-500 text-xs mt-1">Please set up Google Client ID in .env.local</p>
+                  </div>
+                `;
+              }
+              return;
+            }
 
-            window.google.accounts.id.renderButton(
-              document.getElementById("googleSignInDiv"),
-              { theme: "outline", size: "large" }
-            );
+            try {
+              window.google.accounts.id.initialize({
+                client_id: clientId,
+                callback: handleCredentialResponse,
+              });
 
-            window.google.accounts.id.prompt();
+              window.google.accounts.id.renderButton(
+                document.getElementById("googleSignInDiv"),
+                { theme: "outline", size: "large" }
+              );
+
+              window.google.accounts.id.prompt();
+            } catch (error) {
+              console.error("❌ Error initializing Google Sign-In:", error);
+            }
           }}
         />
         <Card>
@@ -121,9 +163,13 @@ export function LoginForm({
                     Login
                   </Button>
                   <div id="googleSignInDiv" className="w-full flex justify-center">
-
                     Login with Google
                   </div>
+                  {error && (
+                    <div className="text-center p-3 border border-red-200 rounded-lg bg-red-50">
+                      <p className="text-red-600 text-sm">{error}</p>
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="mt-4 text-center text-sm">
