@@ -1,7 +1,6 @@
 import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
 import jwt from "jsonwebtoken"
-import  ChatArea  from "./chatarea"
 
 export default function HomeLayout({ children }) {
   const cookie = cookies()
@@ -19,7 +18,6 @@ export default function HomeLayout({ children }) {
 
   return (
     <>
-      <ChatArea />
       {children}
     </>
   )
