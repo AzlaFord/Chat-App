@@ -9,7 +9,7 @@ export async function POST(request) {
     const body = await request.json()
     const {chatName} = body
     if(!token){
-        return new Response(JSON.stringify({message:"tokenu nu exista /nu a fost gasit"}),{
+        return new Response(JSON.stringify({message:"tokenu nu exista nu a fost gasit"}),{
             status:400,
             headers:{"Content-Type":"application/json"}
         })

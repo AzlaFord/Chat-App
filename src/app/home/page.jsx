@@ -9,12 +9,7 @@ export default function TelegramChatApp() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedChat, setSelectedChat] = useState(null)
   const [chats, setChats] = useState([])
-  const [currentUser, setCurrentUser] = useState({
-    id: 1,
-    name: 'You',
-    avatar: '👤',
-    phone: '+1234567890'
-  })
+
   
   const messagesEndRef = useRef(null)
 
@@ -29,14 +24,6 @@ export default function TelegramChatApp() {
   const sendMessage = async () => {
     if (!newMessage.trim() || !selectedChat) return
     
-    // TODO: Replace with your API call
-    // await fetch('/api/messages', {
-    //   method: 'POST',
-    //   body: JSON.stringify({
-    //     message: newMessage,
-    //     chatId: selectedChat?.id
-    //   })
-    // })
     
     setNewMessage('')
   }
@@ -76,10 +63,31 @@ export default function TelegramChatApp() {
     return <Check className="w-4 h-4 text-gray-400" />
   }
 
-  const filteredChats = chats.filter(chat =>
-    chat.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    chat.lastMessage?.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  useEffect(() => {
+    async function getUserChats() {
+      const res = await fetch("/api/findChat", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+
+      const data = await res.json()
+      if (data.success) {
+        setChats(data.data)
+      } else {
+        console.log("Eroare:", data.message)
+      }
+    }
+    const filteredChats = chats.filter(chat =>
+      chat.chatName.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+
+    getUserChats()
+  }, [])
+
+
+
 
   return (
     <div className="flex h-screen bg-white dark:bg-gray-900">
@@ -113,76 +121,74 @@ export default function TelegramChatApp() {
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto">
-          {filteredChats.length === 0 ? (
-            <div className="p-4 text-center text-gray-500 dark:text-gray-400">
-              No chats found
+  <div className="flex-1 overflow-y-auto">
+    {chats.length === 0 ? (
+      <div className="p-4 text-center text-gray-500 dark:text-gray-400">
+        No chats found
+      </div>
+    ) : (
+      chats.map((chat) => (
+          <div
+            key={chat._id} 
+            onClick={() => setSelectedChat(chat)}
+            className={`flex items-center p-4 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors border-b border-gray-100 dark:border-gray-700 ${
+              selectedChat?._id === chat._id ? 'bg-blue-50 dark:bg-blue-900/20' : ''
+            }`}
+          >
+            <div className="relative mr-3">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-medium text-lg">
+                {chat.avatar || chat.chatName.charAt(0).toUpperCase()}
+              </div>
+              {chat.online && (
+                <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-white dark:border-gray-800 rounded-full" />
+              )}
             </div>
-          ) : (
-            filteredChats.map((chat) => (
-              <div
-                key={chat.id}
-                onClick={() => setSelectedChat(chat)}
-                className={`flex items-center p-4 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors border-b border-gray-100 dark:border-gray-700 ${
-                  selectedChat?.id === chat.id ? 'bg-blue-50 dark:bg-blue-900/20' : ''
-                }`}
-              >
-                <div className="relative mr-3">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-medium text-lg">
-                    {chat.avatar || chat.name.charAt(0).toUpperCase()}
-                  </div>
-                  {chat.online && (
-                    <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-white dark:border-gray-800 rounded-full" />
-                  )}
-                </div>
-                
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between mb-1">
-                    <h3 className="font-medium text-gray-900 dark:text-white truncate">
-                      {chat.name}
-                    </h3>
-                    <div className="flex items-center gap-1">
-                      {chat.pinned && <Pin className="w-3 h-3 text-gray-400" />}
-                      <span className="text-xs text-gray-500 dark:text-gray-400">
-                        {formatTime(chat.lastMessageTime)}
-                      </span>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <p className="text-sm text-gray-600 dark:text-gray-400 truncate pr-2">
-                      {chat.isTyping ? (
-                        <span className="text-blue-500">typing...</span>
-                      ) : (
-                        <>
-                          {chat.lastMessageFromSelf && (
-                            <span className="mr-1">
-                              {getMessageStatus({ isOwn: true, ...chat })}
-                            </span>
-                          )}
-                          {chat.lastMessage}
-                        </>
-                      )}
-                    </p>
-                    
-                    <div className="flex items-center gap-1">
-                      {chat.muted && (
-                        <div className="w-5 h-5 rounded-full bg-gray-400 flex items-center justify-center">
-                          <span className="text-xs text-white">🔇</span>
-                        </div>
-                      )}
-                      {chat.unreadCount > 0 && (
-                        <div className="min-w-[20px] h-5 bg-blue-500 text-white text-xs rounded-full flex items-center justify-center px-1">
-                          {chat.unreadCount > 99 ? '99+' : chat.unreadCount}
-                        </div>
-                      )}
-                    </div>
-                  </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center justify-between mb-1">
+                <h3 className="font-medium text-gray-900 dark:text-white truncate">
+                  {chat.chatName}
+                </h3>
+                <div className="flex items-center gap-1">
+                  {chat.pinned && <Pin className="w-3 h-3 text-gray-400" />}
+                  <span className="text-xs text-gray-500 dark:text-gray-400">
+                    {formatTime(chat.lastMessageTime)}
+                  </span>
                 </div>
               </div>
-            ))
-          )}
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-gray-600 dark:text-gray-400 truncate pr-2">
+                  {chat.isTyping ? (
+                    <span className="text-blue-500">typing...</span>
+                  ) : (
+                    <>
+                      {chat.lastMessageFromSelf && (
+                        <span className="mr-1">
+                          {getMessageStatus({ isOwn: true, ...chat })}
+                        </span>
+                      )}
+                      {chat.lastMessage}
+                    </>
+                  )}
+                </p>
+                <div className="flex items-center gap-1">
+                  {chat.muted && (
+                    <div className="w-5 h-5 rounded-full bg-gray-400 flex items-center justify-center">
+                      <span className="text-xs text-white">🔇</span>
+                    </div>
+                  )}
+                  {chat.unreadCount > 0 && (
+                    <div className="min-w-[20px] h-5 bg-blue-500 text-white text-xs rounded-full flex items-center justify-center px-1">
+                      {chat.unreadCount > 99 ? '99+' : chat.unreadCount}
+                    </div>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
+      ))
+    )}
+  </div>
+
       </div>
 
       <div className="flex-1 flex flex-col">

@@ -1,13 +1,13 @@
-import { redirect } from 'next/navigation'
-import { cookies } from 'next/headers'
+import { redirect } from "next/navigation"
+import { cookies } from "next/headers"
 import jwt from "jsonwebtoken"
 
-export default function HomeLayout({ children }) {
-  const cookie = cookies()
-  const token = cookie.get("token")?.value
+export default async function HomeLayout({ children }) {
+  const cookieStore = await cookies() 
+  const token = cookieStore.get("token")?.value
 
   if (!token) {
-    redirect('/api/logout')
+    redirect("/api/logout")
   }
 
   try {
@@ -16,9 +16,5 @@ export default function HomeLayout({ children }) {
     redirect("/api/logout")
   }
 
-  return (
-    <>
-      {children}
-    </>
-  )
+  return <>{children}</>
 }

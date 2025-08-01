@@ -1,10 +1,26 @@
-import { findChat } from "@/lib/mongo/findChat" 
-import { NextResponse } from "next/server"
 
-export async function POST(req) {
-  const body = await req.json()
-  const { userId, chatName } = body
+import { cookies } from "next/headers"
+import jwt from "jsonwebtoken"
+import { findChatsByUserId } from "@/lib/auth"
 
-  const result = await findChat(userId, chatName)
-  return NextResponse.json(result)
+export async function GET(request) {
+  const cookieStore = await cookies()
+  const tokenCookie = cookieStore.get("token")
+  const token = tokenCookie?.value
+
+  if (!token) {
+    return new Response(JSON.stringify({ success: false, message: "No token" }), { status: 401 })
+  }
+
+  let userId
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET)
+    userId = decoded._id 
+  } catch {
+    return new Response(JSON.stringify({ success: false, message: "Invalid token" }), { status: 401 })
+  }
+
+  const result = await findChatsByUserId(userId)
+
+  return new Response(JSON.stringify(result), { status: 200 })
 }
