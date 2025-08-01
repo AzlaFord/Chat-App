@@ -83,12 +83,10 @@ export default function TelegramChatApp() {
 
   return (
     <div className="flex h-screen bg-white dark:bg-gray-900">
-      {/* Left Sidebar - Chat List */}
       <div className={`${sidebarOpen ? 'w-80' : 'w-0'} 
         transition-all duration-300 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 
         flex flex-col overflow-hidden`}>
         
-        {/* Sidebar Header */}
         <div className="p-4 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between mb-4">
             <button 
@@ -103,7 +101,6 @@ export default function TelegramChatApp() {
             </button>
           </div>
           
-          {/* Search Bar */}
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
             <input
@@ -116,7 +113,6 @@ export default function TelegramChatApp() {
           </div>
         </div>
 
-        {/* Chat List */}
         <div className="flex-1 overflow-y-auto">
           {filteredChats.length === 0 ? (
             <div className="p-4 text-center text-gray-500 dark:text-gray-400">
@@ -131,7 +127,6 @@ export default function TelegramChatApp() {
                   selectedChat?.id === chat.id ? 'bg-blue-50 dark:bg-blue-900/20' : ''
                 }`}
               >
-                {/* Avatar */}
                 <div className="relative mr-3">
                   <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-medium text-lg">
                     {chat.avatar || chat.name.charAt(0).toUpperCase()}
@@ -141,7 +136,6 @@ export default function TelegramChatApp() {
                   )}
                 </div>
                 
-                {/* Chat Info */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between mb-1">
                     <h3 className="font-medium text-gray-900 dark:text-white truncate">
@@ -191,10 +185,8 @@ export default function TelegramChatApp() {
         </div>
       </div>
 
-      {/* Main Chat Area */}
       <div className="flex-1 flex flex-col">
         {!selectedChat ? (
-          // Welcome Screen
           <div className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-gray-900">
             <div className="text-center max-w-md">
               <div className="w-32 h-32 mx-auto mb-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
@@ -218,7 +210,6 @@ export default function TelegramChatApp() {
           </div>
         ) : (
           <>
-            {/* Chat Header */}
             <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -259,7 +250,6 @@ export default function TelegramChatApp() {
               </div>
             </div>
 
-            {/* Messages Area */}
             <div className="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900 p-4">
               {messages.length === 0 ? (
                 <div className="flex items-center justify-center h-full">
@@ -324,7 +314,6 @@ export default function TelegramChatApp() {
               )}
             </div>
 
-            {/* Message Input */}
             <div className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 p-4">
               <div className="flex items-end gap-3 max-w-4xl mx-auto">
                 <button className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">

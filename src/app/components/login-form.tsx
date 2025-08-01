@@ -64,14 +64,12 @@ export function LoginForm({
     });
   }
 
-  // în useEffect
   useEffect(() => {
     if (token) {
       router.push("/home")
     }
   }, [token])
 
-  // Google script loader
   useEffect(() => {
     if (typeof window === "undefined") return;
     (window as any).handleCredentialResponse = handleCredentialResponse;
