@@ -135,3 +135,34 @@ export async function createChat(user,chatName) {
     }
     
 }
+
+export async function findChat(userId, chatName) {
+  const client = await clientPromise
+  const db = client.db("Chat-With-Us")
+  
+  try {
+    const result = await db.collection("Chats").findOne({
+      chatName: chatName,
+      userId: userId 
+    })
+
+    if (!result) {
+      return {
+        success: false,
+        message: "Chatul nu a fost găsit"
+      }
+    }
+
+    return {
+      success: true,
+      message: "Chatul a fost găsit",
+      data: result
+    }
+  } catch (err) {
+    console.log("error:", err)
+    return {
+      success: false,
+      message: "Ceva nu a mers bine"
+    }
+  }
+}
