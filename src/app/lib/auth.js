@@ -2,6 +2,7 @@ import clientPromise from "./mongoDB";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { OAuth2Client } from "google-auth-library";
+import { ObjectId } from "mongodb"
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const saltRounds = 10;
@@ -136,15 +137,16 @@ export async function createChat(user,chatName) {
     
 }
 
+
 export async function findChatsByUserId(userId) {
   const client = await clientPromise
   const db = client.db("Chat-With-Us")
 
   try {
-    const chats = await db.collection("Chats").find({
-      userId: new ObjectId(userId)
-    }).toArray()
-
+  const chats = await db.collection("Chats").find({
+    userId: userId 
+  }).toArray()
+    console.log("Chats din DB pentru userId", userId, chats)
     return { success: true, message: "Chats găsite", data: chats }
   } catch (error) {
     return { success: false, message: "Eroare la găsirea chat-urilor" }

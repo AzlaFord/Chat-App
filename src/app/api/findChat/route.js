@@ -15,11 +15,12 @@ export async function GET(request) {
   let userId
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET)
-    userId = decoded._id 
+    userId = decoded.userId
+    console.log(decoded)
   } catch {
     return new Response(JSON.stringify({ success: false, message: "Invalid token" }), { status: 401 })
   }
-
+  
   const result = await findChatsByUserId(userId)
 
   return new Response(JSON.stringify(result), { status: 200 })

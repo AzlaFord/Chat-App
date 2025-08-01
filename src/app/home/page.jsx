@@ -35,26 +35,22 @@ export default function TelegramChatApp() {
     }
   }
 
-  const formatTime = (date) => {
-    const now = new Date()
-    const messageDate = new Date(date)
-    const diffInHours = (now - messageDate) / (1000 * 60 * 60)
-    
-    if (diffInHours < 24) {
-      return new Intl.DateTimeFormat('en-US', {
+  function formatTime(date) {
+    if (!date) return "Data necunoscută"
+
+    try {
+      const messageDate = new Date(date)
+      return new Intl.DateTimeFormat("ro-RO", {
         hour: '2-digit',
         minute: '2-digit',
-        hour12: false
-      }).format(messageDate)
-    } else if (diffInHours < 48) {
-      return 'Yesterday'
-    } else {
-      return new Intl.DateTimeFormat('en-US', {
         month: 'short',
         day: 'numeric'
       }).format(messageDate)
+    } catch (err) {
+      return "Data invalidă"
     }
   }
+
 
   const getMessageStatus = (message) => {
     if (!message.isOwn) return null
@@ -85,10 +81,6 @@ export default function TelegramChatApp() {
 
     getUserChats()
   }, [])
-
-
-
-
   return (
     <div className="flex h-screen bg-white dark:bg-gray-900">
       <div className={`${sidebarOpen ? 'w-80' : 'w-0'} 
@@ -103,7 +95,7 @@ export default function TelegramChatApp() {
             >
               <Menu className="w-5 h-5 text-gray-600 dark:text-gray-400" />
             </button>
-            <h1 className="text-xl font-medium text-gray-900 dark:text-white">Telegram</h1>
+            <h1 className="text-xl font-medium text-gray-900 dark:text-white">Chat-With-Us</h1>
             <button className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
               <Search className="w-5 h-5 text-gray-600 dark:text-gray-400" />
             </button>
@@ -137,7 +129,8 @@ export default function TelegramChatApp() {
           >
             <div className="relative mr-3">
               <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-medium text-lg">
-                {chat.avatar || chat.chatName.charAt(0).toUpperCase()}
+                {chat.avatar || selectedChat?.name?.charAt(0)?.toUpperCase() || ""
+}
               </div>
               {chat.online && (
                 <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-white dark:border-gray-800 rounded-full" />
@@ -229,7 +222,8 @@ export default function TelegramChatApp() {
                   )}
                   
                   <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-medium">
-                    {selectedChat.avatar || selectedChat.name.charAt(0).toUpperCase()}
+                    {selectedChat.avatar || selectedChat?.name?.charAt(0)?.toUpperCase() || ""
+}
                   </div>
                   
                   <div>
@@ -285,7 +279,8 @@ export default function TelegramChatApp() {
                         <div className={`flex max-w-xs lg:max-w-md ${message.isOwn ? 'flex-row-reverse' : ''}`}>
                           {showAvatar && !message.isOwn && (
                             <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-sm font-medium mr-2 mt-auto">
-                              {message.avatar || message.user?.charAt(0)?.toUpperCase()}
+                              {message.avatar || selectedChat?.name?.charAt(0)?.toUpperCase() || ""
+}
                             </div>
                           )}
                           
