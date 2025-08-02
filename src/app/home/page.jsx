@@ -23,19 +23,30 @@ export default function TelegramChatApp() {
     if (!newMessage.trim() || !selectedChat) return
 
     const content = newMessage.trim()
-    const chatId = selectedChat.id
+    const chatId = selectedChat._id 
 
     const res = await fetch('/api/messages', {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ content,chatId })
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text:content, chatId })
     })
-    const data = await res.json()
+    if (!res.ok) {
+      const text = await res.text()
+
+      let error
+      try {
+        error = JSON.parse(text)
+      } catch {
+        error = { message: 'Răspuns invalid de la server', raw: text }
+      }
+
+      console.error("Eroare trimitere mesaj:", error)
+      return
+    }
 
     setNewMessage('')
   }
+
 
 
   const handleKeyPress = (e) => {
