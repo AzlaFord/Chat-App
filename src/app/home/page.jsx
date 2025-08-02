@@ -1,6 +1,7 @@
 "use client"
 import { useState, useEffect, useRef } from 'react'
 import { Send, Search, Menu, Phone, MoreVertical, Paperclip, Smile, Check, CheckCheck, Pin, Archive, Settings } from 'lucide-react'
+import { useMemo } from 'react'
 export default function TelegramChatApp() {
   const [messages, setMessages] = useState([])
   const [newMessage, setNewMessage] = useState('')
@@ -91,17 +92,24 @@ export default function TelegramChatApp() {
 
       const data = await res.json()
       if (data.success) {
+        console.log(data)
+
         setChats(data.data)
       } else {
         console.log("Eroare:", data.message)
       }
     }
-    const filteredChats = chats.filter(chat =>
-      chat.chatName.toLowerCase().includes(searchQuery.toLowerCase())
-    )
 
+    
     getUserChats()
   }, [])
+
+  const filteredChats = useMemo(() => {
+    return chats.filter(chat => 
+      chat.chatName?.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+  }, [chats, searchQuery])
+
   return (
     <div className="flex h-screen bg-white dark:bg-gray-900">
       <div className={`${sidebarOpen ? 'w-80' : 'w-0'} 
@@ -140,7 +148,7 @@ export default function TelegramChatApp() {
         No chats found
       </div>
     ) : (
-      chats.map((chat) => (
+      filteredChats.map((chat) => (
           <div
             key={chat._id} 
             onClick={() => setSelectedChat(chat)}
@@ -165,7 +173,7 @@ export default function TelegramChatApp() {
                 <div className="flex items-center gap-1">
                   {chat.pinned && <Pin className="w-3 h-3 text-gray-400" />}
                   <span className="text-xs text-gray-500 dark:text-gray-400">
-                    {formatTime(chat.lastMessageTime)}
+                    {formatTime(chat.createdAt)}
                   </span>
                 </div>
               </div>

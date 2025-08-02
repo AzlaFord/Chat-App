@@ -144,7 +144,8 @@ export async function findChatsByUserId(userId) {
 
   try {
   const chats = await db.collection("Chats").find({
-    userId: userId 
+    userId: userId
+    
   }).toArray()
     return { success: true, message: "Chats găsite", data: chats }
   } catch (error) {
