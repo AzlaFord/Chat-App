@@ -1,7 +1,6 @@
 "use client"
 import { useState, useEffect, useRef } from 'react'
 import { Send, Search, Menu, Phone, MoreVertical, Paperclip, Smile, Check, CheckCheck, Pin, Archive, Settings } from 'lucide-react'
-
 export default function TelegramChatApp() {
   const [messages, setMessages] = useState([])
   const [newMessage, setNewMessage] = useState('')
@@ -9,7 +8,6 @@ export default function TelegramChatApp() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedChat, setSelectedChat] = useState(null)
   const [chats, setChats] = useState([])
-
   
   const messagesEndRef = useRef(null)
 
@@ -23,10 +21,22 @@ export default function TelegramChatApp() {
 
   const sendMessage = async () => {
     if (!newMessage.trim() || !selectedChat) return
-    
-    
+
+    const content = newMessage.trim()
+    const chatId = selectedChat.id
+
+    const res = await fetch('/api/messages', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ content,chatId })
+    })
+    const data = await res.json()
+
     setNewMessage('')
   }
+
 
   const handleKeyPress = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -222,10 +232,8 @@ export default function TelegramChatApp() {
                   )}
                   
                   <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-medium">
-                    {selectedChat.avatar || selectedChat?.name?.charAt(0)?.toUpperCase() || ""
-}
+                    {selectedChat.avatar || selectedChat?.name?.charAt(0)?.toUpperCase() || ""}
                   </div>
-                  
                   <div>
                     <h2 className="font-medium text-gray-900 dark:text-white">
                       {selectedChat.name}
@@ -283,7 +291,6 @@ export default function TelegramChatApp() {
 }
                             </div>
                           )}
-                          
                           <div className={`${message.isOwn ? 'mr-2' : showAvatar ? '' : 'ml-10'}`}>
                             <div
                               className={`p-3 rounded-2xl ${

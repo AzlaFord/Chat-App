@@ -146,7 +146,6 @@ export async function findChatsByUserId(userId) {
   const chats = await db.collection("Chats").find({
     userId: userId 
   }).toArray()
-    console.log("Chats din DB pentru userId", userId, chats)
     return { success: true, message: "Chats găsite", data: chats }
   } catch (error) {
     return { success: false, message: "Eroare la găsirea chat-urilor" }
