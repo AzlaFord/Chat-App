@@ -152,3 +152,18 @@ export async function findChatsByUserId(userId) {
     return { success: false, message: "Eroare la găsirea chat-urilor" }
   }
 }
+
+export async function findChatsByMessages(chatId) {
+  const client = await clientPromise
+  const db = client.db("Chat-With-Us")
+
+  try {
+  const messages = await db.collection("mesaje").find({
+    chatId: chatId
+    
+  }).toArray()
+    return { success: true, message: "Mesaje gasite", data: messages }
+  } catch (error) {
+    return { success: false, message: "Eroare la găsirea mesajelor" }
+  }
+}
