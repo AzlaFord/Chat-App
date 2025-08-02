@@ -47,7 +47,28 @@ export default function TelegramChatApp() {
 
     setNewMessage('')
   }
+  useEffect(() => {
+    if (!selectedChat?._id) return;
 
+    async function fetchMessages() {
+      const res = await fetch('/api/getMessages', {
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chatId: selectedChat._id })
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        setMessages(data.data);
+      } else {
+        console.error(data.message);
+        setMessages([]);
+      }
+    }
+
+    fetchMessages();
+  }, [selectedChat]);
 
 
   const handleKeyPress = (e) => {
@@ -58,20 +79,26 @@ export default function TelegramChatApp() {
   }
 
   function formatTime(date) {
-    if (!date) return "Data necunoscută"
+    if (!date) return "Data necunoscută";
+
+    console.log("formatTime date:", date);
 
     try {
-      const messageDate = new Date(date)
+      const messageDate = new Date(date);
+      if (isNaN(messageDate.getTime())) {
+        return "Data invalidă";
+      }
       return new Intl.DateTimeFormat("ro-RO", {
         hour: '2-digit',
         minute: '2-digit',
         month: 'short',
         day: 'numeric'
-      }).format(messageDate)
+      }).format(messageDate);
     } catch (err) {
-      return "Data invalidă"
+      return "Data invalidă";
     }
   }
+
 
 
   const getMessageStatus = (message) => {
@@ -99,8 +126,6 @@ export default function TelegramChatApp() {
         console.log("Eroare:", data.message)
       }
     }
-
-    
     getUserChats()
   }, [])
 
@@ -156,6 +181,7 @@ export default function TelegramChatApp() {
               selectedChat?._id === chat._id ? 'bg-blue-50 dark:bg-blue-900/20' : ''
             }`}
           >
+            
             <div className="relative mr-3">
               <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-medium text-lg">
                 {chat.avatar || selectedChat?.name?.charAt(0)?.toUpperCase() || ""
@@ -265,9 +291,6 @@ export default function TelegramChatApp() {
                 
                 <div className="flex items-center gap-2">
                   <button className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                    <Phone className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-                  </button>
-                  <button className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                     <Search className="w-5 h-5 text-gray-600 dark:text-gray-400" />
                   </button>
                   <button className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
@@ -300,8 +323,8 @@ export default function TelegramChatApp() {
                     
                     return (
                       <div
-                        key={message.id}
-                        className={`flex ${message.isOwn ? 'justify-end' : 'justify-start'} mb-1`}
+                        key={message._id}
+                        className={`flex ${message.userName ? 'justify-end' : 'justify-start'} mb-1`}
                       >
                         <div className={`flex max-w-xs lg:max-w-md ${message.isOwn ? 'flex-row-reverse' : ''}`}>
                           {showAvatar && !message.isOwn && (
@@ -319,14 +342,14 @@ export default function TelegramChatApp() {
                               } ${isLastInGroup ? 'mb-2' : 'mb-1'}`}
                             >
                               <p className="text-sm leading-relaxed break-words">
-                                {message.content || message.message}
+                                {message.text || message.message}
                               </p>
                               
                               <div className={`flex items-center justify-end gap-1 mt-1 ${
                                 message.isOwn ? 'text-blue-100' : 'text-gray-500 dark:text-gray-400'
                               }`}>
                                 <span className="text-xs">
-                                  {formatTime(message.timestamp || message.time)}
+                                  {formatTime(message.createdAt || message.time)}
                                 </span>
                                 {getMessageStatus(message)}
                               </div>
