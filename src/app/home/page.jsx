@@ -9,7 +9,8 @@ export default function TelegramChatApp() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedChat, setSelectedChat] = useState(null)
   const [chats, setChats] = useState([])
-  
+  const [user, setUser] = useState(null)
+
   const messagesEndRef = useRef(null)
 
   const scrollToBottom = () => {
@@ -47,6 +48,31 @@ export default function TelegramChatApp() {
 
     setNewMessage('')
   }
+
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const res = await fetch('/api/user', {
+          method: 'GET',
+          credentials: 'include' 
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          console.error("Eroare API:", data.message);
+          return;
+        }
+
+        setUser(data);
+      } catch (err) {
+        console.error("Eroare la fetch:", err);
+      }
+    }
+
+    getUser();
+  }, []);
+
   useEffect(() => {
     if (!selectedChat?._id) return;
 
@@ -58,7 +84,7 @@ export default function TelegramChatApp() {
       });
 
       const data = await res.json();
-
+      
       if (data.success) {
         setMessages(data.data);
       } else {
@@ -99,15 +125,13 @@ export default function TelegramChatApp() {
     }
   }
 
-
-
   const getMessageStatus = (message) => {
     if (!message.userId) return null
     if (message.read) return <CheckCheck className="w-4 h-4 text-blue-500" />
     if (message.delivered) return <CheckCheck className="w-4 h-4 text-gray-400" />
     return <Check className="w-4 h-4 text-gray-400" />
   }
-
+  
   useEffect(() => {
     async function getUserChats() {
       const res = await fetch("/api/findChat", {
@@ -134,7 +158,7 @@ export default function TelegramChatApp() {
       chat.chatName?.toLowerCase().includes(searchQuery.toLowerCase())
     )
   }, [chats, searchQuery])
-
+  
   return (
     <div className="flex h-screen bg-white dark:bg-gray-900">
       <div className={`${sidebarOpen ? 'w-80' : 'w-0'} 
@@ -318,29 +342,29 @@ export default function TelegramChatApp() {
               ) : (
                 <div className="max-w-4xl mx-auto space-y-2">
                   {messages.map((message, index) => {
-                    const showAvatar = !message.userId && (index === 0 || messages[index - 1].userId || messages[index - 1].userId !== message.userId)
-                    const isLastInGroup = index === messages.length - 1 || messages[index + 1].userId !== message.userId || messages[index + 1].userId !== message.userId
+                    const isFromMe = message.userId === user.userId
+                    const showAvatar = !isFromMe && (index === 0 || messages[index - 1].userId || messages[index - 1].userId !== message.userId)
+                    const isLastInGroup = index === messages.length - 1 || messages[index + 1].userId !== user.userId || messages[index + 1].userId !== message.userId
                     
                     return (
                       <div
                         key={message._id}
-                        className={`flex ${message._id ? 'justify-end' : 'justify-start'} mb-1`}
+                        className={`flex ${isFromMe ? 'justify-end' : 'justify-start'} mb-1`}
                       >
-                        <div className={`flex max-w-xs lg:max-w-md ${message.userId ? 'flex-row-reverse' : ''}`}>
-                          {showAvatar && !message.userId && (
-                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-sm font-medium mr-2 mt-auto">
-                              {message.avatar || selectedChat?.name?.charAt(0)?.toUpperCase() || ""
-}
-                            </div>
-                          )}
+                        <div className={`flex max-w-xs lg:max-w-md ${user.userId ? 'flex-row-reverse' : ''}`}>
+                            {showAvatar && (
+                              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-sm font-medium mr-2 mt-auto">
+                                {message.avatar || selectedChat?.name?.charAt(0)?.toUpperCase() || ""}
+                              </div>
+                            )}
                           <div className={`${message.userId ? 'mr-2' : showAvatar ? '' : 'ml-10'}`}>
-                            <div
-                              className={`p-3 rounded-2xl ${
-                                message.userId
-                                  ? 'bg-blue-500 text-white rounded-br-md'
-                                  : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm border border-gray-100 dark:border-gray-700 rounded-bl-md'
-                              } ${isLastInGroup ? 'mb-2' : 'mb-1'}`}
-                            >
+                              <div
+                                className={`p-3 rounded-2xl ${
+                                  isFromMe
+                                    ? 'bg-blue-500 text-white rounded-br-md'
+                                    : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm border border-gray-100 dark:border-gray-700 rounded-bl-md'
+                                } ${isLastInGroup ? 'mb-2' : 'mb-1'}`}
+                              >
                               <p className="text-sm leading-relaxed break-words">
                                 {message.text || message.message}
                               </p>
