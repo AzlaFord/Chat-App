@@ -205,7 +205,6 @@ export default function TelegramChatApp() {
               selectedChat?._id === chat._id ? 'bg-blue-50 dark:bg-blue-900/20' : ''
             }`}
           >
-            
             <div className="relative mr-3">
               <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-medium text-lg">
                 {chat.avatar || selectedChat?.name?.charAt(0)?.toUpperCase() || ""
@@ -305,11 +304,14 @@ export default function TelegramChatApp() {
                   </div>
                   <div>
                     <h2 className="font-medium text-gray-900 dark:text-white">
-                      {selectedChat.name}
+                      {selectedChat.chatName}
                     </h2>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      {selectedChat.online ? 'online' : `last seen ${formatTime(selectedChat.lastSeen)}`}
-                    </p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                        {selectedChat?.online
+                          ? 'online'
+                          : `last seen ${formatTime(messages.at(-1)?.createdAt)}`
+                        }
+                      </p>
                   </div>
                 </div>
                 
@@ -332,7 +334,7 @@ export default function TelegramChatApp() {
                       <span className="text-2xl text-white">👋</span>
                     </div>
                     <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-                      Say hello to {selectedChat.name}
+                      Say hello to {selectedChat.chatName}
                     </h3>
                     <p className="text-gray-500 dark:text-gray-400">
                       This is the beginning of your conversation
@@ -354,7 +356,7 @@ export default function TelegramChatApp() {
                         <div className={`flex max-w-xs lg:max-w-md ${user.userId ? 'flex-row-reverse' : ''}`}>
                             {showAvatar && (
                               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-sm font-medium mr-2 mt-auto">
-                                {message.avatar || selectedChat?.name?.charAt(0)?.toUpperCase() || ""}
+                                {message.avatar || selectedChat?.chatName?.charAt(0)?.toUpperCase() || ""}
                               </div>
                             )}
                           <div className={`${message.userId ? 'mr-2' : showAvatar ? '' : 'ml-10'}`}>
