@@ -329,14 +329,14 @@ export default function TelegramChatApp() {
                         <div className={`flex max-w-xs lg:max-w-md ${message.isOwn ? 'flex-row-reverse' : ''}`}>
                           {showAvatar && !message.isOwn && (
                             <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-sm font-medium mr-2 mt-auto">
-                              {message.avatar || selectedChat?.name?.charAt(0)?.toUpperCase() || ""
+                              {message.avatar || selectedChat?.userName?.charAt(0)?.toUpperCase() || ""
 }
                             </div>
                           )}
-                          <div className={`${message.isOwn ? 'mr-2' : showAvatar ? '' : 'ml-10'}`}>
+                          <div className={`${message.userName ? 'mr-2' : showAvatar ? '' : 'ml-10'}`}>
                             <div
                               className={`p-3 rounded-2xl ${
-                                message.isOwn
+                                message.userName
                                   ? 'bg-blue-500 text-white rounded-br-md'
                                   : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm border border-gray-100 dark:border-gray-700 rounded-bl-md'
                               } ${isLastInGroup ? 'mb-2' : 'mb-1'}`}
@@ -346,7 +346,7 @@ export default function TelegramChatApp() {
                               </p>
                               
                               <div className={`flex items-center justify-end gap-1 mt-1 ${
-                                message.isOwn ? 'text-blue-100' : 'text-gray-500 dark:text-gray-400'
+                                message.userName ? 'text-blue-100' : 'text-gray-500 dark:text-gray-400'
                               }`}>
                                 <span className="text-xs">
                                   {formatTime(message.createdAt || message.time)}
