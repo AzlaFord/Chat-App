@@ -207,8 +207,8 @@ export default function TelegramChatApp() {
           >
             <div className="relative mr-3">
               <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-medium text-lg">
-                {chat.avatar || selectedChat?.name?.charAt(0)?.toUpperCase() || ""
-}
+                {chat.avatar || chat.chatName?.charAt(0)?.toUpperCase() || ""}
+
               </div>
               {chat.online && (
                 <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-white dark:border-gray-800 rounded-full" />
@@ -300,7 +300,7 @@ export default function TelegramChatApp() {
                   )}
                   
                   <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-medium">
-                    {selectedChat.avatar || selectedChat?.name?.charAt(0)?.toUpperCase() || ""}
+                    {selectedChat.avatar || selectedChat?.chatName?.charAt(0)?.toUpperCase() || ""}
                   </div>
                   <div>
                     <h2 className="font-medium text-gray-900 dark:text-white">
