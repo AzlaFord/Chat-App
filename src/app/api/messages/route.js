@@ -31,7 +31,6 @@ export async function POST(request) {
 
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET);
-    console.log(payload)
     const mesaj = await createMessage(payload, text, chatId);
 
     if (!mesaj.success) {

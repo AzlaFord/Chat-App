@@ -102,7 +102,7 @@ export default function TelegramChatApp() {
 
 
   const getMessageStatus = (message) => {
-    if (!message.isOwn) return null
+    if (!message.userId) return null
     if (message.read) return <CheckCheck className="w-4 h-4 text-blue-500" />
     if (message.delivered) return <CheckCheck className="w-4 h-4 text-gray-400" />
     return <Check className="w-4 h-4 text-gray-400" />
@@ -211,7 +211,7 @@ export default function TelegramChatApp() {
                     <>
                       {chat.lastMessageFromSelf && (
                         <span className="mr-1">
-                          {getMessageStatus({ isOwn: true, ...chat })}
+                          {getMessageStatus({ userId: true, ...chat })}
                         </span>
                       )}
                       {chat.lastMessage}
@@ -318,25 +318,25 @@ export default function TelegramChatApp() {
               ) : (
                 <div className="max-w-4xl mx-auto space-y-2">
                   {messages.map((message, index) => {
-                    const showAvatar = !message.isOwn && (index === 0 || messages[index - 1].isOwn || messages[index - 1].userId !== message.userId)
-                    const isLastInGroup = index === messages.length - 1 || messages[index + 1].isOwn !== message.isOwn || messages[index + 1].userId !== message.userId
+                    const showAvatar = !message.userId && (index === 0 || messages[index - 1].userId || messages[index - 1].userId !== message.userId)
+                    const isLastInGroup = index === messages.length - 1 || messages[index + 1].userId !== message.userId || messages[index + 1].userId !== message.userId
                     
                     return (
                       <div
                         key={message._id}
                         className={`flex ${message._id ? 'justify-end' : 'justify-start'} mb-1`}
                       >
-                        <div className={`flex max-w-xs lg:max-w-md ${message.isOwn ? 'flex-row-reverse' : ''}`}>
-                          {showAvatar && !message.isOwn && (
+                        <div className={`flex max-w-xs lg:max-w-md ${message.userId ? 'flex-row-reverse' : ''}`}>
+                          {showAvatar && !message.userId && (
                             <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-sm font-medium mr-2 mt-auto">
                               {message.avatar || selectedChat?.name?.charAt(0)?.toUpperCase() || ""
 }
                             </div>
                           )}
-                          <div className={`${message.isOwn ? 'mr-2' : showAvatar ? '' : 'ml-10'}`}>
+                          <div className={`${message.userId ? 'mr-2' : showAvatar ? '' : 'ml-10'}`}>
                             <div
                               className={`p-3 rounded-2xl ${
-                                message.isOwn
+                                message.userId
                                   ? 'bg-blue-500 text-white rounded-br-md'
                                   : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm border border-gray-100 dark:border-gray-700 rounded-bl-md'
                               } ${isLastInGroup ? 'mb-2' : 'mb-1'}`}
@@ -346,7 +346,7 @@ export default function TelegramChatApp() {
                               </p>
                               
                               <div className={`flex items-center justify-end gap-1 mt-1 ${
-                                message.isOwn ? 'text-blue-100' : 'text-gray-500 dark:text-gray-400'
+                                message.userId ? 'text-blue-100' : 'text-gray-500 dark:text-gray-400'
                               }`}>
                                 <span className="text-xs">
                                   {formatTime(message.createdAt || message.time)}
