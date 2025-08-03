@@ -31,6 +31,7 @@ export async function POST(request) {
 
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET);
+    console.log(payload)
     const mesaj = await createMessage(payload, text, chatId);
 
     if (!mesaj.success) {
@@ -46,7 +47,6 @@ export async function POST(request) {
     );
 
   } catch (err) {
-    console.error(err);
     return new Response(
       JSON.stringify({ message: "Eroare server", error: err.message }),
       { status: 500, headers: { "Content-Type": "application/json" } }

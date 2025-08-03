@@ -106,14 +106,16 @@ export async function createMessage(user,text,chatId) {
     const db = client.db("Chat-With-Us")
     const createdAt = new Date()
     try{
-        await db.collection("mesaje").insertOne({ chatId,  userName: user.userName,text,createdAt})
+        await db.collection("mesaje").insertOne({ chatId, userId: user.userId , userName: user.userName,text,createdAt})
         return {success:true,message:"totul a mers bine ",data:{
             chatId,
-            userId: user._id,
+            userId: user.userId,
             user,
             text,
             createdAt
+            
         }}
+        
     }catch(err){
         return {success:false,message:"nu a mers prea bine ",user:user}
     }
