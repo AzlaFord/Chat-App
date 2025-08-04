@@ -170,7 +170,7 @@ return (
           >
             <Menu className="w-5 h-5 text-gray-400" />
           </button>
-          <h1 className="text-xl font-medium text-white">Chat-With-Us</h1>
+          <h1 className="text-xl font-medium text-white">ChatUs</h1>
           <button className="p-2 rounded-full hover:bg-gray-700 transition-colors">
             <Search className="w-5 h-5 text-gray-400" />
           </button>
@@ -192,7 +192,7 @@ return (
         <div className="p-3">
           <div className="flex items-center justify-between mb-2">
             <span className="text-gray-400 text-xs font-semibold uppercase tracking-wide">
-              Direct Messages
+              Connect
             </span>
             <Plus className="w-4 h-4 text-gray-400 hover:text-white cursor-pointer" />
           </div>
@@ -439,7 +439,6 @@ return (
             )}
           </div>
 
-          {/* Message Input */}
           <div className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 p-4">
             <div className="flex items-end gap-3 max-w-4xl mx-auto">
               <button className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">

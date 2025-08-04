@@ -139,7 +139,6 @@ export async function createChat(user,chatName) {
     
 }
 
-
 export async function findChatsByUserId(userId) {
   const client = await clientPromise
   const db = client.db("Chat-With-Us")
