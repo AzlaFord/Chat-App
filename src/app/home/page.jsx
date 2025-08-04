@@ -88,7 +88,6 @@ export default function TelegramChatApp() {
       if (data.success) {
         setMessages(data.data);
       } else {
-        console.error(data.message);
         setMessages([]);
       }
     }
@@ -106,8 +105,6 @@ export default function TelegramChatApp() {
 
   function formatTime(date) {
     if (!date) return "Data necunoscută";
-
-    console.log("formatTime date:", date);
 
     try {
       const messageDate = new Date(date);
@@ -143,7 +140,6 @@ export default function TelegramChatApp() {
 
       const data = await res.json()
       if (data.success) {
-        console.log(data)
 
         setChats(data.data)
       } else {
@@ -353,20 +349,22 @@ export default function TelegramChatApp() {
                         key={message._id}
                         className={`flex ${isFromMe ? 'justify-end' : 'justify-start'} mb-1`}
                       >
-                        <div className={`flex max-w-xs lg:max-w-md ${user.userId ? 'flex-row-reverse' : ''}`}>
+                        <div className={`flex max-w-xs lg:max-w-md ${user.isFromMe ? 'flex-row-reverse' : ''}`}>
                             {showAvatar && (
                               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-sm font-medium mr-2 mt-auto">
                                 {message.avatar || selectedChat?.chatName?.charAt(0)?.toUpperCase() || ""}
                               </div>
                             )}
                           <div className={`${message.userId ? 'mr-2' : showAvatar ? '' : 'ml-10'}`}>
-                              <div
-                                className={`p-3 rounded-2xl ${
-                                  isFromMe
-                                    ? 'bg-blue-500 text-white rounded-br-md'
-                                    : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm border border-gray-100 dark:border-gray-700 rounded-bl-md'
-                                } ${isLastInGroup ? 'mb-2' : 'mb-1'}`}
-                              >
+                                  <div
+                                    className={`p-3 rounded-2xl inline-block break-words whitespace-pre-wrap max-w-lg
+                                      ${
+                                        isFromMe
+                                          ? 'bg-blue-500 text-white rounded-br-md'
+                                          : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm border border-gray-100 dark:border-gray-700 rounded-bl-md'
+                                      }
+                                      ${isLastInGroup ? 'mb-2' : 'mb-1'}`}
+                                  >
                               <p className="text-sm leading-relaxed break-words">
                                 {message.text || message.message}
                               </p>
