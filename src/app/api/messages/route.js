@@ -41,7 +41,7 @@ export async function POST(request) {
     }
 
     return new Response(
-      JSON.stringify({ message: "mesajul a fost creat", data: mesaj.data }),
+      JSON.stringify({ success: true, message: "mesajul a fost creat", data: mesaj.data }),
       { status: 200, headers: { "Content-Type": "application/json" } }
     );
 

@@ -1,9 +1,10 @@
 "use client"
 import { useState, useEffect, useRef } from 'react'
-import { Send, Search, Menu, MoreVertical, Paperclip, Smile, Check, CheckCheck, Pin,LogOut} from 'lucide-react'
+import { Send, Search, Menu, MoreVertical, Smile, Check, CheckCheck, Pin,LogOut} from 'lucide-react'
 import { useMemo } from 'react'
 import {  Settings, Plus } from 'lucide-react';
 import { redirect } from 'next/navigation'
+import socket from "@/lib/socket"
 export default function TelegramChatApp() {
   const [messages, setMessages] = useState([])
   const [newMessage, setNewMessage] = useState('')
@@ -27,29 +28,41 @@ export default function TelegramChatApp() {
     if (!newMessage.trim() || !selectedChat) return
 
     const content = newMessage.trim()
-    const chatId = selectedChat._id 
+    const chatId = selectedChat._id
 
     const res = await fetch('/api/messages', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text:content, chatId })
+      body: JSON.stringify({ text: content, chatId })
     })
-    if (!res.ok) {
-      const text = await res.text()
 
-      let error
-      try {
-        error = JSON.parse(text)
-      } catch {
-        error = { message: 'Răspuns invalid de la server', raw: text }
-      }
+    const json = await res.json()
 
-      console.error("Eroare trimitere mesaj:", error)
+    if (!res.ok || !json.success) {
+      console.error("Eroare la salvare:", json.message)
       return
     }
 
-    setNewMessage('')
+    const savedMessage = json.data
+
+    socket.emit("chat message", savedMessage)
+
+    setNewMessage("")
   }
+
+  useEffect(() => {
+    socket.on("chat message", (msg) => {
+      if (msg.chatId === selectedChat._id) {
+        setMessages(prev => [...prev, msg])
+      }
+  })
+
+  return () => {
+    socket.off("chat message")
+  }
+}, [selectedChat])
+
+
   function  handleLogout(){
     redirect("/api/logout")
   }
@@ -388,7 +401,6 @@ return (
                   const showAvatar = !isFromMe && (index === 0 || messages[index - 1].userId !== message.userId)
                   const nextMessage = messages[index + 1]
                   const isConsecutive = nextMessage && nextMessage.userId === message.userId
-                  
                   return (
                     <div
                       key={message._id}
