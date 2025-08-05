@@ -2,6 +2,7 @@ import clientPromise from "./mongoDB";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { OAuth2Client } from "google-auth-library";
+import { ObjectId } from "mongodb";
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const saltRounds = 10;

@@ -34,14 +34,3 @@ app.prepare().then(() => {
     console.log(`🚀 Server on http://localhost:${PORT}`)
   })
 })
-io.on("connection", (socket) => {
-  console.log("🔌 Client conectat:", socket.id)
-
-  socket.on("chat message", (msg) => {
-    socket.broadcast.emit("chat message", msg)
-  })
-
-  socket.on("disconnect", () => {
-    console.log("❌ Client deconectat:", socket.id)
-  })
-})

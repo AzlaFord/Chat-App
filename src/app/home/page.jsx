@@ -20,6 +20,32 @@ export default function TelegramChatApp() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }
 
+  async function fetchUser(userId) {
+    const res = await fetch(`/api/getUser?userId=${userId}`)
+    if (!res.ok) {
+      throw new Error("Eroare la preluarea userului")
+    }
+    return await res.json()
+  }
+
+  const [usersMap, setUsersMap] = useState({})
+
+  useEffect(() => {
+    const uniqueUserIds = [...new Set(messages.map(m => m.userId).filter(Boolean))]
+
+    Promise.all(uniqueUserIds.map(id => fetchUser(id)))
+      .then(results => {
+        const newUsers = {}
+        results.forEach((res, i) => {
+          if (res.success) newUsers[uniqueUserIds[i]] = res.data
+        })
+        setUsersMap(newUsers)
+      })
+      .catch(err => {
+        console.error("Error fetching users:", err)
+      })
+  }, [messages])
+
   useEffect(() => {
     scrollToBottom()
   }, [messages])
@@ -401,6 +427,8 @@ return (
                   const showAvatar = !isFromMe && (index === 0 || messages[index - 1].userId !== message.userId)
                   const nextMessage = messages[index + 1]
                   const isConsecutive = nextMessage && nextMessage.userId === message.userId
+                  const userData = usersMap[message.userId]
+
                   return (
                     <div
                       key={message._id}
@@ -409,7 +437,7 @@ return (
                       <div className={`flex items-start gap-2 ${isFromMe ? 'flex-row-reverse max-w-xs sm:max-w-sm md:max-w-md' : 'max-w-xs sm:max-w-sm md:max-w-md'}`}>
                         {showAvatar && !isFromMe && (
                           <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-sm font-medium flex-shrink-0 mt-1">
-                            {message.avatar || selectedChat?.chatName?.charAt(0)?.toUpperCase() || ""}
+                            {message.avatar || userData?.userName.charAt(0)?.toUpperCase() || ""}
                           </div>
                         )}
 
@@ -417,7 +445,7 @@ return (
                           {showAvatar && (
                             <div className={`mb-1 px-1 ${isFromMe ? 'text-right' : 'text-left'}`}>
                               <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
-                                {isFromMe ? 'You' : selectedChat.chatName}
+                                {isFromMe ? 'You' : userData?.userName}
                               </span>
                             </div>
                           )}

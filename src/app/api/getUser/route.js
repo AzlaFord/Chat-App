@@ -1,4 +1,4 @@
-import { getuser } from "@/lib/db"
+import { getUser } from "@/lib/auth"
 import { NextResponse } from "next/server"
 
 export async function GET(req) {
@@ -9,6 +9,6 @@ export async function GET(req) {
     return NextResponse.json({ success: false, message: "Missing userId" }, { status: 400 })
   }
 
-  const result = await getuser(userId)
+  const result = await getUser(userId)
   return NextResponse.json(result)
 }
