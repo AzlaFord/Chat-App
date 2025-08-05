@@ -2,7 +2,6 @@ import clientPromise from "./mongoDB";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { OAuth2Client } from "google-auth-library";
-import { ObjectId } from "mongodb"
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const saltRounds = 10;
@@ -120,6 +119,21 @@ export async function createMessage(user,text,chatId) {
     }catch(err){
         return {success:false,message:"nu a mers prea bine ",user:user}
     }
+}
+
+export async function getUser(userId) {
+  const client = await clientPromise
+  const db = client.db("Chat-With-Us")
+  try{
+    const user = await db.collection("users").findOne({_id: new ObjectId(userId)})
+
+    if (!user) return { success: false, message: "Userul nu a fost găsit" }
+
+    return { success: true, message: "User gasit", data: user }
+
+  } catch (error) {
+    return { success: false, message: "Eroare la găsirea userului" }
+  }
 }
 
 export async function createChat(user,chatName) {

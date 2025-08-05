@@ -1,4 +1,4 @@
-import { getUsers } from "./../../lib/users";
+import { getUser } from "./../../lib/users";
 
 export async function GET(request) {
   const users = await getUsers();
