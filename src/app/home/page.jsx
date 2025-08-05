@@ -1,8 +1,9 @@
 "use client"
 import { useState, useEffect, useRef } from 'react'
-import { Send, Search, Menu, Phone, MoreVertical, Paperclip, Smile, Check, CheckCheck, Pin, Archive } from 'lucide-react'
+import { Send, Search, Menu, MoreVertical, Paperclip, Smile, Check, CheckCheck, Pin,LogOut} from 'lucide-react'
 import { useMemo } from 'react'
-import { Mic, Headphones, Settings, Plus } from 'lucide-react';
+import {  Settings, Plus } from 'lucide-react';
+import { redirect } from 'next/navigation'
 export default function TelegramChatApp() {
   const [messages, setMessages] = useState([])
   const [newMessage, setNewMessage] = useState('')
@@ -48,6 +49,9 @@ export default function TelegramChatApp() {
     }
 
     setNewMessage('')
+  }
+  function  handleLogout(){
+    redirect("/api/logout")
   }
 
   useEffect(() => {
@@ -279,13 +283,19 @@ return (
               <span className="text-gray-400 text-xs">#{user?.userId || "Not Found"}</span>
             </div>
           </div>
-          
           <div className="flex items-center gap-1">
             <button
               className="p-1.5 hover:bg-gray-700 rounded text-gray-400 hover:text-white transition-colors"
               title="Settings"
             >
               <Settings className="w-4 h-4" />
+            </button>
+            <button
+              onClick={handleLogout}
+              className="p-1.5 hover:bg-gray-700 rounded text-gray-400 hover:text-white transition-colors"
+              title="Logout"
+            >
+              <LogOut className="w-4 h-4" />
             </button>
           </div>
         </div>
