@@ -428,6 +428,7 @@ return (
                   const nextMessage = messages[index + 1]
                   const isConsecutive = nextMessage && nextMessage.userId === message.userId
                   const userData = usersMap[message.userId]
+                  const showSenderName = (index === 0 || messages[index - 1].userId !== message.userId)
 
                   return (
                     <div
@@ -442,13 +443,21 @@ return (
                         )}
 
                         <div className={`${!showAvatar && !isFromMe ? 'ml-11' : ''} ${isFromMe ? 'mr-0' : 'ml-0'}`}>
-                          {showAvatar && (
-                            <div className={`mb-1 px-1 ${isFromMe ? 'text-right' : 'text-left'}`}>
-                              <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
-                                {isFromMe ? 'You' : userData?.userName}
-                              </span>
-                            </div>
-                          )}
+                            {isFromMe && showSenderName ? (
+                              <div className="mb-1 px-1 text-right">
+                                <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                                  You
+                                </span>
+                              </div>
+                            ) : showAvatar && (
+                              <div className="mb-1 px-1 text-left">
+                                <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                                  {userData?.userName}
+                                </span>
+                              </div>
+                            )}
+
+                          
                           
                           <div
                             className={`inline-block px-3 py-2 max-w-full ${
