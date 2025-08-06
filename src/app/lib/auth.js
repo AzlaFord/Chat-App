@@ -187,11 +187,11 @@ export async function deleteChat(_id) {
     if (result.deletedCount === 1) {
       return { success: true, message: "Chat sters cu succes" }
     } else {
-      return { success: false, message: "Chatul nu a fost găsit" }
+      return { success: false, message: "Chatul nu a fost gasit" }
     }
-    
+
   } catch (err) {
-    console.error("Eroare la ștergere chat:", err)
+    console.error("Eroare la stergere chat:", err)
     return { success: false, message: "Ceva nu a mers bine" }
   }
 }
@@ -205,9 +205,9 @@ export async function findChatsByUserId(userId) {
     userId: userId
     
   }).toArray()
-    return { success: true, message: "Chats găsite", data: chats }
+    return { success: true, message: "Chats gasite", data: chats }
   } catch (error) {
-    return { success: false, message: "Eroare la găsirea chat-urilor" }
+    return { success: false, message: "Eroare la gasirea chat-urilor" }
   }
 }
 

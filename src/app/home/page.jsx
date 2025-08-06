@@ -184,6 +184,29 @@ async function createChat(e) {
     )
   }, [chats, searchQuery])
 
+const deleteChat = async () => {
+  try {
+    const res = await fetch("/api/chatDelete", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ _id: selectedChat._id }),
+    });
+
+    const data = await res.json();
+
+    if (res.ok && data.success) {
+      getUserChats();    
+      setOpen1(false);    
+    } else {
+      console.error("❌ Eroare la ștergere:", data.message);
+    }
+
+  } catch (err) {
+    console.error("❌ Eroare fetch:", err);
+  }
+};
+
+
   const sendMessage = async () => {
     if (!newMessage.trim() || !selectedChat) return
 
@@ -529,7 +552,7 @@ async function createChat(e) {
                         </AlertDialogHeader>
                         <AlertDialogFooter>
                           <AlertDialogCancel onClick={() => setOpen1(false)}>Cancel</AlertDialogCancel>
-                          <AlertDialogAction >Continue</AlertDialogAction>
+                          <AlertDialogAction onClick={deleteChat} >Continue</AlertDialogAction>
                         </AlertDialogFooter>
                       </AlertDialogContent>
                     </AlertDialog>
