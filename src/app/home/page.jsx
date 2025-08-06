@@ -40,8 +40,9 @@ export default function TelegramChatApp() {
   const [open, setOpen] = useState(false)
   const [open1, setOpen1] = useState(false)
   const messagesEndRef = useRef(null)
+  const [open3, setOpen3] = useState(false)
   const [errorMessage, setErrorMessage] = useState('');
-
+  const [text,setText] = useState("")
   
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -64,6 +65,38 @@ export default function TelegramChatApp() {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+async function getUserChats() {
+  const res = await fetch("/api/findChat");
+  const data = await res.json();
+  if (data.success) {
+    setChats(data.data);
+  } else {
+    console.log("Eroare:", data.message);
+  }
+}
+
+useEffect(() => {
+  getUserChats();
+}, []);
+
+async function createChat(e) {
+  e.preventDefault();
+  const chatName = text;
+  const res = await fetch('/api/createchat', {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ chatName })
+  });
+  const data = await res.json();
+  if(res.ok){
+    socket.emit("chatCreated", data.data);
+    setOpen3(false);
+    await getUserChats(); 
+  }
+}
+
+
 
   async function fetchUser(userId) {
     const res = await fetch(`/api/getUser?userId=${userId}`)
@@ -134,25 +167,6 @@ export default function TelegramChatApp() {
 
     fetchMessages();
   }, [selectedChat]);
-
-  useEffect(() => {
-    async function getUserChats() {
-      const res = await fetch("/api/findChat", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json"
-        }
-      })
-
-      const data = await res.json()
-      if (data.success) {
-        setChats(data.data)
-      } else {
-        console.log("Eroare:", data.message)
-      }
-    }
-    getUserChats()
-  }, [])
 
   useEffect(() => {
     socket.on("chat message", (msg) => {
@@ -306,7 +320,29 @@ export default function TelegramChatApp() {
               <span className="text-gray-400 text-xs font-semibold uppercase tracking-wide">
                 Connect
               </span>
-              <Plus className="w-4 h-4 text-gray-400 hover:text-white cursor-pointer" />
+              <Plus className="w-4 h-4 text-gray-400 hover:text-white cursor-pointer" onClick={() => setOpen3(true)}/>
+              <Dialog  open={open3} onOpenChange={setOpen3}>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Form</DialogTitle>
+                  </DialogHeader>
+                    <form className="space-y-4" onSubmit={createChat}>
+                      <input
+                        type="text"
+                        value={text}
+                        onChange={(e) => setText(e.target.value)}
+                        placeholder="Group Name"
+                        className="w-full border p-2 rounded"
+                      />
+                      <Button type="submit">Create</Button>
+                    </form>
+                  <DialogFooter>
+                    <Button variant="outline" onClick={() => setOpen3(false)}>
+                      Close
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
           

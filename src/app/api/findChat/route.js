@@ -16,7 +16,6 @@ export async function GET(request) {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET)
     userId = decoded.userId
-    console.log(decoded)
   } catch {
     return new Response(JSON.stringify({ success: false, message: "Invalid token" }), { status: 401 })
   }

@@ -24,11 +24,11 @@ export async function POST(request) {
             const payload = jwt.verify(token, process.env.JWT_SECRET);
             const userForCreateChat = { _id: payload.userId };
             const chat = await createChat(userForCreateChat, chatName);
-    
+
             if (!chat.success) {
                 return  Response.json({ message: "nu a fost creat mesajul" }, { status: 400 });
             }
-    
+            
             return  Response.json({ message: "mesajul a fost creat", data: chat.data });
             
     } catch (err) {
