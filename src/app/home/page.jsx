@@ -96,8 +96,6 @@ async function createChat(e) {
   }
 }
 
-
-
   async function fetchUser(userId) {
     const res = await fetch(`/api/getUser?userId=${userId}`)
     if (!res.ok) {

@@ -1,4 +1,3 @@
-
 import { findChatsByMessages } from "@/lib/auth"
 
 export async function POST(request) {
