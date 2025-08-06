@@ -25,7 +25,7 @@ import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu"
 import { useMemo } from 'react'
 import { redirect } from 'next/navigation'
-import socket from "@/lib/socket"
+import socket from "../lib/socket"
 
 export default function TelegramChatApp() {
   const [userId, setUserId] = useState("")
