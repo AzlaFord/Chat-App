@@ -17,6 +17,7 @@ import { redirect } from 'next/navigation'
 import socket from "@/lib/socket"
 
 export default function TelegramChatApp() {
+  const [userId, setUserId] = useState("")
   const [messages, setMessages] = useState([])
   const [newMessage, setNewMessage] = useState('')
   const [sidebarOpen, setSidebarOpen] = useState(true)
@@ -189,7 +190,6 @@ export default function TelegramChatApp() {
   };
   const handleAddReq = (e) =>{
     event.preventDefault()
-    setOpen(false)
   }
   const handleKeyPress = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -453,12 +453,12 @@ export default function TelegramChatApp() {
                         <Dialog  open={open} onOpenChange={setOpen}>
                     <DialogContent>
                       <DialogHeader>
-                        <DialogTitle>Formular</DialogTitle>
+                        <DialogTitle>Form</DialogTitle>
                       </DialogHeader>
-                      <form className="space-y-4">
-                        <input type="text" placeholder="User Id" className="w-full border p-2 rounded" />
-                        <Button onClick={handleAddReq} type="submit">Send</Button>
-                      </form>
+                        <form className="space-y-4" onClick={handleAddReq}>
+                          <input type="text" value={userId} onChange={(e) => setUserId(e.target.value)} placeholder="User Id" className="w-full border p-2 rounded" />
+                          <Button  onClick={() => setOpen(false)}  type="submit">Send</Button>
+                        </form>
                       <DialogFooter>
                         <Button variant="outline" onClick={() => setOpen(false)}>
                           Close

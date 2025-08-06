@@ -133,9 +133,26 @@ export async function getUser(userId) {
     return { success: true, message: "User gasit", data: user }
 
   } catch (error) {
-    return { success: false, message: "Eroare la găsirea userului" }
+    return { success: false, message: "Eroare la gasirea userului" }
   }
 }
+
+export async function addUser(chatId, userId) {
+  const client = await clientPromise
+  const db = client.db("Chat-With-Us")
+
+  try {
+    const result = await db.collection("Chats").updateOne(
+      { chatId }, 
+      { $addToSet: { userId: userId } } 
+    )
+
+    return { success: true, message: "User adaugat", data: result }
+  } catch (error) {
+    return { success: false, message: "Eroare la adaugare user", error }
+  }
+}
+
 
 export async function createChat(user,chatName) {
     const client = await clientPromise
