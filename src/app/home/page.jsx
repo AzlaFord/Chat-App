@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Menu, Search, Plus, Pin, Settings, LogOut, MoreVertical, Send, Smile, X, Check, CheckCheck } from 'lucide-react';
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu"
 import { useMemo } from 'react'
 import { redirect } from 'next/navigation'
 import socket from "@/lib/socket"
@@ -239,9 +240,6 @@ export default function TelegramChatApp() {
               <X className="w-5 h-5 text-gray-400" />
             </button>
             <h1 className="text-xl font-medium text-white">ChatUs</h1>
-            <button className="p-2 rounded-full hover:bg-gray-700 transition-colors">
-              <Search className="w-5 h-5 text-gray-400" />
-            </button>
           </div>
           
           <div className="relative">
@@ -424,14 +422,22 @@ export default function TelegramChatApp() {
                     </p>
                   </div>
                 </div>
-                
                 <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
                   <button className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                     <Search className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600 dark:text-gray-400" />
                   </button>
-                  <button className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                    <MoreVertical className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600 dark:text-gray-400" />
-                  </button>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <button className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                          <MoreVertical className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600 dark:text-gray-400" />
+                        </button>
+                      </DropdownMenuTrigger>
+
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem>Editează</DropdownMenuItem>
+                        <DropdownMenuItem>Șterge</DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                 </div>
               </div>
             </div>
