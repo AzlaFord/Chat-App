@@ -28,7 +28,6 @@ export function BirthDatePicker({ value, onChange }: Props) {
     value ? value.getFullYear() : undefined
   )
 
-  // Dacă toate sunt selectate, construiește data finală și anunță parent
   React.useEffect(() => {
     if (
       selectedDay !== undefined &&

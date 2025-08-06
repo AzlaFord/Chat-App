@@ -1,4 +1,5 @@
 "use client"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { LoginForm } from "@/components/login-form"
@@ -7,7 +8,26 @@ export default function Login() {
   const [userName, setUserName] = useState('')
   const [password, setPassword] = useState('')
   const router = useRouter()
+  const testUser = async () =>{
+    const userName = "TESTUSER"
+    const password = "adolf123"
+    const res = await fetch("/api/login", {
+      method: "POST",
+      headers: {
+          "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userName, password }),
+      credentials: "include"
+    })
 
+    const data = await res.json()
+
+    if(res.ok){
+      router.push(`/home`)
+    } else {
+      console.log(data)
+    }
+  }
   async function handleSubmit(e) {
     e.preventDefault()
 
@@ -40,6 +60,9 @@ export default function Login() {
             onPasswordChange={setPassword}
             onSubmit={handleSubmit}
           />
+      <Alert variant="default | destructive">
+        <AlertTitle onClick={testUser} >Test User Click me !!!!!!!!!!! </AlertTitle>
+      </Alert>
         </div>
       </div>
     </>
