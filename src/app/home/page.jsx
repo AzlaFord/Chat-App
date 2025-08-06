@@ -2,6 +2,15 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Menu, Search, Plus, Pin, Settings, LogOut, MoreVertical, Send, Smile, X, Check, CheckCheck } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter
+} from "@/components/ui/dialog"
+import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu"
 import { useMemo } from 'react'
 import { redirect } from 'next/navigation'
@@ -16,7 +25,7 @@ export default function TelegramChatApp() {
   const [chats, setChats] = useState([])
   const [user, setUser] = useState(null)
   const [usersMap, setUsersMap] = useState({})
-  
+  const [open, setOpen] = useState(false)
   const messagesEndRef = useRef(null)
 
   
@@ -178,7 +187,10 @@ export default function TelegramChatApp() {
   const handleChatSelect = (chat) => {
     setSelectedChat(chat);
   };
-
+  const handleAddReq = (e) =>{
+    event.preventDefault()
+    setOpen(false)
+  }
   const handleKeyPress = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
@@ -433,11 +445,27 @@ export default function TelegramChatApp() {
                         </button>
                       </DropdownMenuTrigger>
 
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem>Editează</DropdownMenuItem>
-                        <DropdownMenuItem>Șterge</DropdownMenuItem>
+                    <DropdownMenuContent align="end">
+                        <DropdownMenuItem onClick={() => setOpen(true)} >Add User</DropdownMenuItem>
+                        <DropdownMenuItem>Delete Chat</DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
+                        <Dialog  open={open} onOpenChange={setOpen}>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Formular</DialogTitle>
+                      </DialogHeader>
+                      <form className="space-y-4">
+                        <input type="text" placeholder="User Id" className="w-full border p-2 rounded" />
+                        <Button onClick={handleAddReq} type="submit">Send</Button>
+                      </form>
+                      <DialogFooter>
+                        <Button variant="outline" onClick={() => setOpen(false)}>
+                          Close
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
                 </div>
               </div>
             </div>
