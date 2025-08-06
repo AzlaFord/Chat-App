@@ -21,14 +21,12 @@ export async function POST(request) {
             const addUse = await addUser(chatId, userId);
     
             if (!addUse.success) {
-                return new Response(JSON.stringify({ message: "nu a fost creat mesajul" }), {
+                return new Response(JSON.stringify({ message: "nu a fost adaugat userul" }), {
                     status: 400,
                     headers: { "Content-Type": "application/json" }
                 });
-
             }
-    
-            return new Response(JSON.stringify({ message: "mesajul a fost creat", data: addUse.data }), {
+            return new Response(JSON.stringify({ message: "mesajul a fost adugat userul", data: addUse.data }), {
                 status: 200,
                 headers: { "Content-Type": "application/json" }
             });

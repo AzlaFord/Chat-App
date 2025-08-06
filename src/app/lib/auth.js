@@ -142,8 +142,13 @@ export async function addUser(chatId, userId) {
   const db = client.db("Chat-With-Us")
 
   try {
+    const exists = await db.collection("users").findOne({ _id: new ObjectId(userId) });
+    
+    if(!exists){
+      return { success: false, message: "user nu exista", error }
+    }
     const result = await db.collection("Chats").updateOne(
-      { chatId }, 
+      { _id: new ObjectId(chatId) }, 
       { $addToSet: { userId: userId } } 
     )
 

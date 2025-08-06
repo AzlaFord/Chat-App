@@ -17,7 +17,7 @@ import { redirect } from 'next/navigation'
 import socket from "@/lib/socket"
 
 export default function TelegramChatApp() {
-  const [userId, setUserId] = useState("")
+  const [userId, setUserId] = useState(" ")
   const [messages, setMessages] = useState([])
   const [newMessage, setNewMessage] = useState('')
   const [sidebarOpen, setSidebarOpen] = useState(true)
@@ -28,6 +28,7 @@ export default function TelegramChatApp() {
   const [usersMap, setUsersMap] = useState({})
   const [open, setOpen] = useState(false)
   const messagesEndRef = useRef(null)
+  const [errorMessage, setErrorMessage] = useState('');
 
   
   useEffect(() => {
@@ -188,9 +189,30 @@ export default function TelegramChatApp() {
   const handleChatSelect = (chat) => {
     setSelectedChat(chat);
   };
-  const handleAddReq = (e) =>{
-    event.preventDefault()
-  }
+
+  const handleAddReq = async (e) => {
+    e.preventDefault();
+
+    const chatId = selectedChat._id;
+    if (!userId || !chatId) return;
+
+    let res = await fetch('/api/addUserToChat', {
+      method: "POST",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chatId, userId })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      setOpen(false); 
+    }else{
+      setErrorMessage('User inexistent/invalid')
+    }
+  };
+
+
+
   const handleKeyPress = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
@@ -455,14 +477,28 @@ export default function TelegramChatApp() {
                       <DialogHeader>
                         <DialogTitle>Form</DialogTitle>
                       </DialogHeader>
-                        <form className="space-y-4" onClick={handleAddReq}>
-                          <input type="text" value={userId} onChange={(e) => setUserId(e.target.value)} placeholder="User Id" className="w-full border p-2 rounded" />
-                          <Button  onClick={() => setOpen(false)}  type="submit">Send</Button>
+
+                        <form className="space-y-4" onSubmit={handleAddReq}>
+                          <input
+                            type="text"
+                            value={userId}
+                            onChange={(e) => setUserId(e.target.value)}
+                            placeholder="User Id"
+                            className="w-full border p-2 rounded"
+                          />
+                          <Button type="submit">Send</Button>
                         </form>
+                        {errorMessage && (
+                          <div className="text-red-500 text-sm mb-2">
+                            {errorMessage}
+                          </div>
+                        )}
                       <DialogFooter>
+
                         <Button variant="outline" onClick={() => setOpen(false)}>
                           Close
                         </Button>
+                      
                       </DialogFooter>
                     </DialogContent>
                   </Dialog>
