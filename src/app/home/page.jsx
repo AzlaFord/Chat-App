@@ -3,6 +3,17 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Menu, Search, Plus, Pin, Settings, LogOut, MoreVertical, Send, Smile, X, Check, CheckCheck } from 'lucide-react';
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import {
   Dialog,
   DialogContent,
   DialogHeader,
@@ -17,7 +28,7 @@ import { redirect } from 'next/navigation'
 import socket from "@/lib/socket"
 
 export default function TelegramChatApp() {
-  const [userId, setUserId] = useState(" ")
+  const [userId, setUserId] = useState("")
   const [messages, setMessages] = useState([])
   const [newMessage, setNewMessage] = useState('')
   const [sidebarOpen, setSidebarOpen] = useState(true)
@@ -27,6 +38,7 @@ export default function TelegramChatApp() {
   const [user, setUser] = useState(null)
   const [usersMap, setUsersMap] = useState({})
   const [open, setOpen] = useState(false)
+  const [open1, setOpen1] = useState(false)
   const messagesEndRef = useRef(null)
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -469,10 +481,26 @@ export default function TelegramChatApp() {
 
                     <DropdownMenuContent align="end">
                         <DropdownMenuItem onClick={() => setOpen(true)} >Add User</DropdownMenuItem>
-                        <DropdownMenuItem>Delete Chat</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => setOpen1(true)}>Delete Chat</DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
-                        <Dialog  open={open} onOpenChange={setOpen}>
+
+                    <AlertDialog open={open1} onOpenChange={setOpen1}>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This action cannot be undone. This will permanently delete/remove you from the chat.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel onClick={() => setOpen1(false)}>Cancel</AlertDialogCancel>
+                          <AlertDialogAction >Continue</AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+
+                    <Dialog  open={open} onOpenChange={setOpen}>
                     <DialogContent>
                       <DialogHeader>
                         <DialogTitle>Form</DialogTitle>
@@ -494,11 +522,9 @@ export default function TelegramChatApp() {
                           </div>
                         )}
                       <DialogFooter>
-
                         <Button variant="outline" onClick={() => setOpen(false)}>
                           Close
                         </Button>
-                      
                       </DialogFooter>
                     </DialogContent>
                   </Dialog>
