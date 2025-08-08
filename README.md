@@ -1,36 +1,90 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Chat-App
 
-## Getting Started
+## Descriere proiect  
+Chat-App este o aplicație web de chat în timp real care permite utilizatorilor să se autentifice, să creeze și să participe în conversații private. Mesajele sunt transmise instantaneu folosind WebSocket (Socket.IO), iar datele utilizatorilor și mesajele sunt stocate într-o bază de date MongoDB.  
 
-First, run the development server:
+## Funcționalități principale  
+- Autentificare și înregistrare utilizatori (login/signup)  
+- Creare și vizualizare conversații  
+- Trimiterea și primirea mesajelor în timp real între utilizatori  
+- Salvarea istoricului mesajelor în baza de date  
+- UI React modern și responsive  
 
+## Tehnologii folosite  
+- Frontend: React, React Router  
+- Backend: Node.js, Express  
+- Comunicare în timp real: Socket.IO  
+- Baza de date: MongoDB (cu Mongoose)  
+- Autentificare: JSON Web Tokens (JWT)  
+
+## Structura proiectului  
+Chat-App/
+│
+├── client/ # Frontend React
+│ ├── src/ # Cod sursă React
+│ ├── public/ # Resurse statice
+│ └── package.json # Dependințe frontend
+│
+├── server/ # Backend Node.js + Express
+│ ├── models/ # Modele MongoDB (Mongoose)
+│ ├── routes/ # Rute API
+│ ├── controllers/ # Logica rute
+│ ├── index.js # Pornirea server-ului
+│ └── package.json # Dependințe backend
+│
+├── .env.example # Variabile mediu
+└── README.md # Documentație (aici)
+
+## Instalare și rulare locală  
+
+1. Clonează repo-ul:  
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+git clone https://github.com/AzlaFord/Chat-App.git
+cd Chat-App
+Configurează variabilele de mediu:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Creează un fișier .env în folderul server și setează variabilele necesare (de ex: conexiunea la MongoDB, secret JWT, port) conform .env.example
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+Instalează dependențele backend și frontend:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+npm start
+Cum funcționează aplicația
 
-## Learn More
+Utilizatorii se pot înregistra și autentifica
 
-To learn more about Next.js, take a look at the following resources:
+După login, utilizatorii pot vedea lista conversațiilor
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Se pot crea conversații noi sau intra în cele existente
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Mesajele trimise sunt transmise prin Socket.IO și afișate în timp real
 
-## Deploy on Vercel
+Mesajele sunt salvate în MongoDB pentru istoric
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Cum contribui
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Dacă vrei să contribui:
+
+Fork repo-ul
+
+Creează un branch nou pentru funcționalitatea ta
+
+Fă modificările necesare și testează local
+
+Deschide un Pull Request cu o descriere clară a schimbărilor
+
+## Structura codului (detaliat)
+
+### Backend (`server/`)
+- `index.js` — punctul de intrare al serverului, configurarea Express și Socket.IO, conexiunea la MongoDB, pornirea serverului
+- `models/` — modele Mongoose pentru utilizatori, mesaje, conversații
+- `routes/` — rutele API pentru autentificare, gestionarea conversațiilor și mesajelor
+- `controllers/` — logica aferentă rutelor, cum ar fi crearea unui utilizator sau salvarea unui mesaj
+- `middleware/` (dacă există) — middleware pentru autentificare JWT și alte verificări
+
+### Frontend (`client/`)
+- `src/components/` — componente React pentru UI (Login, Chat, Lista conversațiilor etc)
+- `src/context/` (dacă există) — context React pentru starea globală (ex: utilizatorul autentificat, mesajele)
+- `src/utils/` — funcții utile, api calls etc
+- `src/App.js` — componenta principală care gestionează rutele și logica aplicației
+---
+
