@@ -158,7 +158,6 @@ export async function addUser(chatId, userId) {
   }
 }
 
-
 export async function createChat(user,chatName) {
     const client = await clientPromise
     const db = client.db("Chat-With-Us")

@@ -15,8 +15,13 @@ Chat-App este o aplicație web de chat în timp real care permite utilizatorilor
 - Comunicare în timp real: Socket.IO  
 - Baza de date: MongoDB (cu Mongoose)  
 - Autentificare: JSON Web Tokens (JWT)  
-- Manipulare cookie-uri: cookie (npm package)  
 
+## Ce este  un WebSocket ?
+E un protocol de comunicare care creează o conexiune bidirecțională, persistentă între client (browser) și server.
+
+După ce se stabilește conexiunea, atât clientul, cât și serverul pot trimite mesaje oricând, fără să deschidă o nouă cerere HTTP.
+
+E mult mai eficient decât metodele vechi (polling, long-polling) pentru comunicare în timp real.
 
 ## Structura proiectului  
 Chat-App/
@@ -39,7 +44,7 @@ Chat-App/
 ## Instalare și rulare locală  
 
 1. Clonează repo-ul:  
-```bash
+
 git clone https://github.com/AzlaFord/Chat-App.git
 cd Chat-App
 Configurează variabilele de mediu:
