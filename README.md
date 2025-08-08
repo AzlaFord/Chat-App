@@ -11,11 +11,12 @@ Chat-App este o aplicație web de chat în timp real care permite utilizatorilor
 - UI React modern și responsive  
 
 ## Tehnologii folosite  
-- Frontend: React, React Router  
-- Backend: Node.js, Express  
+- Frontend și backend: Next.js (React + API routes)  
 - Comunicare în timp real: Socket.IO  
 - Baza de date: MongoDB (cu Mongoose)  
 - Autentificare: JSON Web Tokens (JWT)  
+- Manipulare cookie-uri: cookie (npm package)  
+
 
 ## Structura proiectului  
 Chat-App/
