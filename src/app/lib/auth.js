@@ -176,9 +176,6 @@ export async function createChat(user,chatName) {
     
 }
 
-import { ObjectId } from "mongodb";
-import clientPromise from "../lib/mongodb"; // presupun că ai clientPromise
-
 export async function deleteChat(userId, _id) {
   const client = await clientPromise;
   const db = client.db("Chat-With-Us");
