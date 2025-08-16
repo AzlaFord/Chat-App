@@ -176,24 +176,38 @@ export async function createChat(user,chatName) {
     
 }
 
-export async function deleteChat(_id) {
-  const client = await clientPromise
-  const db = client.db("Chat-With-Us")
+import { ObjectId } from "mongodb";
+import clientPromise from "../lib/mongodb"; // presupun că ai clientPromise
+
+export async function deleteChat(userId, _id) {
+  const client = await clientPromise;
+  const db = client.db("Chat-With-Us");
 
   try {
-    const result = await db.collection("Chats").deleteOne({ _id: new ObjectId(_id) })
+    const chat = await db.collection("Chats").findOne({ _id: new ObjectId(_id) });
+
+    if (!chat) {
+      return { success: false, message: "Chatul nu a fost gasit" };
+    }
+
+    if (chat.userId[0] !== userId) {
+      return { success: false, message: "Nu ai permisiunea de a șterge chatul" };
+    }
+
+    const result = await db.collection("Chats").deleteOne({ _id: new ObjectId(_id) });
 
     if (result.deletedCount === 1) {
-      return { success: true, message: "Chat sters cu succes" }
+      return { success: true, message: "Chat sters cu succes" };
     } else {
-      return { success: false, message: "Chatul nu a fost gasit" }
+      return { success: false, message: "Chatul nu a fost gasit" };
     }
 
   } catch (err) {
-    console.error("Eroare la stergere chat:", err)
-    return { success: false, message: "Ceva nu a mers bine" }
+    console.error("Eroare la stergere chat:", err);
+    return { success: false, message: "Ceva nu a mers bine" };
   }
 }
+
 
 export async function findChatsByUserId(userId) {
   const client = await clientPromise
